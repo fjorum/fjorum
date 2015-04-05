@@ -1,0 +1,37 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+<@layout.myLayout "Willkommen" 0>
+
+
+<h1>${i18n("index.title")}</h1>
+
+<p>${i18n("index.content")}</p>
+
+<p><a href="https://github.com/raphaelbauer/ninja-casino">Ninja-Casino</a></p>
+<br/>
+
+<div class="panel panel-default">
+    <div class="panel-heading">${i18n("index.login")}</div>
+    <div class="panel-body">
+        <form role="form" action="/index" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="name"> ${i18n("entity.userEmailOrName")} </label>
+                    <input class="form-control" type="text" id="emailOrName" name="emailOrName"/>
+                    <br/>
+                    <label for="password"> ${i18n("entity.userPassword")} </label>
+                    <input class="form-control" type="password" id="password" name="password"/>
+                    <br/>
+                    <button type="submit" class="btn btn-primary">${i18n("index.login")}</button>
+                </div>
+            </div>
+        </form>
+        <p>TODO <a href="/passwordRecovery">Passwort vergessen?</a></p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Registrierung</div>
+    <div class="panel-body">TODO <a href="/register">Als neuer Nutzer registrieren</a></div>
+</div>
+
+</@layout.myLayout>

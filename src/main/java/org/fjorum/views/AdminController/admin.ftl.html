@@ -1,0 +1,64 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+<@layout.myLayout "Admin" 3>
+
+
+<h1>${i18n("admin.title")}</h1>
+
+<div class="panel panel-default">
+    <div class="panel-heading">${i18n("admin.addUser")}</div>
+    <div class="panel-body">
+        <form role="form" action="/admin/userCreate" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="name"> ${i18n("entity.userName")} </label>
+                    <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
+                    <br/>
+                    <label for="email"> ${i18n("entity.userEmail")} </label>
+                    <input class="form-control" type="email" id="email" name="email" placeholder="Email"/>
+                    <br/>
+                    <label for="password"> ${i18n("entity.userPassword")} </label>
+                    <input class="form-control" type="password" id="password" name="password"/>
+                    <br/>
+                    <button type="submit" class="btn btn-primary">${i18n("admin.addUser")}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">${i18n("admin.userList")}</div>
+    <div class="panel-body">
+        <#list users as u>
+            <div class="row box">
+                <div class="col-md-1">${u_index + 1}</div>
+                <div class="col-md-8">
+                    <form action="/admin/userChange" method="post">
+                        <label>Activ:</label>
+                        <input type="checkbox" name="active" value="active"
+                               <#if u.isActive()>checked="checked"</#if>/>
+                        <input type="text" name="name" value="${u.name}"/>
+                        <input type="text" name="email" value="${u.email}"/>
+                        <label>Mod:</label>
+                        <input type="checkbox" name="moderator" value="Mod"
+                               <#if u.isModerator()>checked="checked"</#if>/>
+                        <label>Admin:</label>
+                        <input type="checkbox" name="administrator" value="Admin"
+                               <#if u.isAdministrator()>checked="checked"</#if>/>
+                        <input type="hidden" name="userId" value="${u.id}"/>
+                        <button type="submit" class="btn btn-sm">Ändern</button>
+                    </form>
+                </div>
+
+                <div class="col-md-3">
+                    <form action="/admin/userRemove" method="post">
+                        <input type="hidden" name="userId" value="${u.id}"/>
+                        <button type="submit" class="btn btn-sm">${i18n("admin.removeUser")}</button>
+                    </form>
+                </div>
+            </div>
+        </#list>
+    </div>
+</div>
+
+</@layout.myLayout>
