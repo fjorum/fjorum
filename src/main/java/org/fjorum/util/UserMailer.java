@@ -1,8 +1,6 @@
 package org.fjorum.util;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import ninja.Context;
 import ninja.Result;
 import ninja.i18n.Messages;
@@ -11,6 +9,9 @@ import ninja.postoffice.Postoffice;
 import ninja.utils.NinjaProperties;
 import org.fjorum.services.UserConstants;
 import org.fjorum.services.UserMessages;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class UserMailer {
 

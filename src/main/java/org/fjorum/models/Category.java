@@ -1,8 +1,6 @@
 package org.fjorum.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -16,7 +14,8 @@ public class Category {
     @Column(name = "sort_order")
     private int sortOrder;
 
-    protected Category() {}
+    protected Category() {
+    }
 
     public Category(String name) {
         setName(name);

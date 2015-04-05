@@ -13,7 +13,7 @@ public class Topic {
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "topic_name")
     private String name;
@@ -21,14 +21,15 @@ public class Topic {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "open")
     private boolean open = true;
     @Column(name = "sticky")
     private boolean sticky = false;
 
-    protected Topic() {}
+    protected Topic() {
+    }
 
     public Topic(Category category, User user, String name) {
         this.category = category;

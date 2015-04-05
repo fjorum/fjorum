@@ -1,6 +1,5 @@
 package org.fjorum.controllers;
 
-import com.google.inject.Inject;
 import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
@@ -18,6 +17,7 @@ import org.fjorum.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 public class IndexController {

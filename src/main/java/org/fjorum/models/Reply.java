@@ -14,10 +14,10 @@ public class Reply {
     @Column(name = "id", nullable = false)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="topic_id")
+    @JoinColumn(name = "topic_id")
     private Topic topic;
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "created")
     @Convert(converter = LocalDateTimeConverter.class)
@@ -28,7 +28,8 @@ public class Reply {
     @Column(name = "reply_content")
     private String content;
 
-    public Reply(){}
+    public Reply() {
+    }
 
     public Long getId() {
         return id;

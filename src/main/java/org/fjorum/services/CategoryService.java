@@ -1,10 +1,10 @@
 package org.fjorum.services;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import org.fjorum.models.Category;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
@@ -66,7 +66,7 @@ public class CategoryService {
         entityManager.persist(bigger);
     }
 
-    public List<Category> findAllCategories(){
+    public List<Category> findAllCategories() {
         EntityManager entityManager = entitiyManagerProvider.get();
         Query q = entityManager.createQuery(
                 "SELECT c FROM Category c ORDER BY c.sortOrder");

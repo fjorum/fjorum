@@ -1,9 +1,10 @@
 package org.fjorum.controllers;
 
-import com.google.inject.Singleton;
 import ninja.Result;
 import ninja.Results;
 import org.fjorum.annotation.Get;
+
+import javax.inject.Singleton;
 
 @Singleton
 public class ErrorController {

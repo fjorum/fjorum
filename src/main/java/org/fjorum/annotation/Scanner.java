@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 public interface Scanner {
 
-    default void scan(Router router, Class<?> ... controllerClasses) {
+    default void scan(Router router, Class<?>... controllerClasses) {
         for (Class<?> controllerClass : controllerClasses) {
             for (Method method : controllerClass.getMethods()) {
                 for (Get get : method.getAnnotationsByType(Get.class)) {

@@ -109,6 +109,6 @@ public class User {
         this.administrator = administrator;
     }
 
-    public static final User GUEST = new User("","","", null);
+    public static final User GUEST = new User("", "", "", null);
 
 }

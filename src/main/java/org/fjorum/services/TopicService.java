@@ -1,12 +1,12 @@
 package org.fjorum.services;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import org.fjorum.models.Category;
 import org.fjorum.models.Topic;
 import org.fjorum.models.User;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;

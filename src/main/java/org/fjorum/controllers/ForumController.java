@@ -1,6 +1,5 @@
 package org.fjorum.controllers;
 
-import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import ninja.Context;
 import ninja.FilterWith;
@@ -24,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +91,6 @@ public class ForumController {
     }
 
 
-
     @Get("/forum/category")
     @UnitOfWork
     public Result category(Context context) {
@@ -114,7 +113,7 @@ public class ForumController {
         try {
             Long categoryId = Long.valueOf(context.getParameter("category_id"));
             String name = context.getParameter("name");
-            return Optionals.lift2((Category c, User u) -> topicCreateTX(c,u,name)).
+            return Optionals.lift2((Category c, User u) -> topicCreateTX(c, u, name)).
                     apply(categoryService.findCategoryById(categoryId),
                             userService.findUserBySession(context.getSession())).
                     map(topic -> Results.redirect("/forum/topic?id=" + topic.getId())).orElse(
@@ -130,7 +129,7 @@ public class ForumController {
     //as we can't redirect to a page for a topic which isn't committed yet.
     @Transactional
     Topic topicCreateTX(Category category, User user, String name) {
-        return topicService.createNewTopic(category,user,name);
+        return topicService.createNewTopic(category, user, name);
     }
 
     @Get("/forum/topic")

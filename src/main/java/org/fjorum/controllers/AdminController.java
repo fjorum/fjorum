@@ -1,6 +1,5 @@
 package org.fjorum.controllers;
 
-import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import ninja.Context;
 import ninja.FilterWith;
@@ -16,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class AdminController {

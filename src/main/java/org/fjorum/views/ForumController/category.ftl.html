@@ -17,12 +17,12 @@
     </div>
     </#list>
 
-<#if  (session.user_id)??>
-<form role="form" method="post" action="/forum/topicCreate">
-    <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
-    <input type="hidden" name="category_id" value="${category.id}"/>
-    <button type="submit" class="btn btn-sm">Create Topic</button>
-</form>
-</#if>
+    <#if  (session.user_id)??>
+    <form role="form" method="post" action="/forum/topicCreate">
+        <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
+        <input type="hidden" name="category_id" value="${category.id}"/>
+        <button type="submit" class="btn btn-sm">Create Topic</button>
+    </form>
+    </#if>
 
 </@layout.myLayout>

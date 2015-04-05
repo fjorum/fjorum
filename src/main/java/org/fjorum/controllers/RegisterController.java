@@ -1,7 +1,6 @@
 package org.fjorum.controllers;
 
 import com.google.common.io.BaseEncoding;
-import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import ninja.Context;
 import ninja.Result;
@@ -24,6 +23,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.UnsupportedEncodingException;

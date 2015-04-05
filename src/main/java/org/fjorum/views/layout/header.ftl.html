@@ -18,11 +18,11 @@
             <ul class="nav navbar-nav">
                 <li <#if activeNavLink == 3>class="active"</#if>><a href="/admin">${i18n("header.admin")}</a></li>
             </ul>
-            <#if (session.user_id)??>
+        <#if (session.user_id)??>
             <ul class="nav navbar-nav">
                 <li><a href="/index/logout">Logout</a></li>
             </ul>
-            </#if>
+        </#if>
         </div>
         <!--/.navbar-collapse -->
     </div>

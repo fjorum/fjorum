@@ -10,10 +10,10 @@
 
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
 
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
 
             <!-- Connection Pooling settings
             <property name="hibernate.connection.provider_class"

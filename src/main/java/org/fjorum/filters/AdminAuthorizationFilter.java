@@ -1,7 +1,6 @@
 package org.fjorum.filters;
 
 
-import com.google.inject.Inject;
 import ninja.*;
 import ninja.jpa.UnitOfWork;
 import ninja.session.FlashScope;
@@ -9,6 +8,7 @@ import ninja.session.Session;
 import org.fjorum.models.User;
 import org.fjorum.services.UserService;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 public class AdminAuthorizationFilter implements Filter {
@@ -28,7 +28,7 @@ public class AdminAuthorizationFilter implements Filter {
                 filter(User::isActive).
                 filter(User::isAdministrator).
                 map(user -> filterChain.next(context)
-        ).orElseGet(() -> {
+                ).orElseGet(() -> {
             flashScope.ifPresent(f -> f.error("security.noAdminAuthorization"));
             return Results.redirect("/errors");
         });
