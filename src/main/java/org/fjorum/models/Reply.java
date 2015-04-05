@@ -1,5 +1,7 @@
 package org.fjorum.models;
 
+import org.fjorum.util.LocalDateTimeConverter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -18,8 +20,10 @@ public class Reply {
     @JoinColumn(name="user_id")
     private User user;
     @Column(name = "created")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
     @Column(name = "modified")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime modified;
     @Column(name = "reply_content")
     private String content;

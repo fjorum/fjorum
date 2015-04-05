@@ -1,5 +1,7 @@
 package org.fjorum.models;
 
+import org.fjorum.util.LocalDateTimeConverter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ public class Topic {
     @Column(name = "topic_name")
     private String name;
     @Column(name = "created")
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -25,7 +28,14 @@ public class Topic {
     @Column(name = "sticky")
     private boolean sticky = false;
 
-    public Topic() {}
+    protected Topic() {}
+
+    public Topic(Category category, User user, String name) {
+        this.category = category;
+        this.user = user;
+        this.name = name;
+        this.created = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;

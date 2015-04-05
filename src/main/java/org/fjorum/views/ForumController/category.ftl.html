@@ -1,6 +1,28 @@
 <#import "../layout/defaultLayout.ftl.html" as layout>
 <@layout.myLayout "Forum" 1>
 
-    <h1>${category.name}</h1>
+<h1>${category.name}</h1>
+    <#list topics as t>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-2">
+                    <a href="/forum/topic?id=${t.id}">${t.name}</a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>TODO Some information about the topic: topic created, sticky..</p>
+        </div>
+    </div>
+    </#list>
+
+<#if  (session.user_id)??>
+<form role="form" method="post" action="/forum/topicCreate">
+    <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
+    <input type="hidden" name="category_id" value="${category.id}"/>
+    <button type="submit" class="btn btn-sm">Create Topic</button>
+</form>
+</#if>
 
 </@layout.myLayout>

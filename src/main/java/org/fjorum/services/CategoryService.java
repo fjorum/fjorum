@@ -73,7 +73,7 @@ public class CategoryService {
         return q.getResultList();
     }
 
-    public Optional<Category> findCategory(Long id) {
+    public Optional<Category> findCategoryById(Long id) {
         EntityManager entityManager = entitiyManagerProvider.get();
         Category category = entityManager.find(Category.class, id);
         return Optional.ofNullable(category);
