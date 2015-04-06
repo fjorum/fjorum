@@ -1,4 +1,4 @@
-package org.fjorum.filters;
+package org.fjorum.controllers.filters;
 
 
 import ninja.*;

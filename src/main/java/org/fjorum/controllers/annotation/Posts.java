@@ -1,4 +1,4 @@
-package org.fjorum.annotation;
+package org.fjorum.controllers.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

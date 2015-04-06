@@ -20,7 +20,7 @@ package org.fjorum.conf;
 import ninja.AssetsController;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
-import org.fjorum.annotation.Scanner;
+import org.fjorum.controllers.annotation.Scanner;
 import org.fjorum.controllers.*;
 
 @SuppressWarnings("unused")
