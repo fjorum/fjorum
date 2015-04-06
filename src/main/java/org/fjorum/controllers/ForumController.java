@@ -7,8 +7,9 @@ import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
 import ninja.session.Session;
-import org.fjorum.controllers.annotation.Get;
-import org.fjorum.controllers.annotation.Post;
+import org.fjorum.controllers.annotations.Get;
+import org.fjorum.controllers.annotations.Post;
+import org.fjorum.controllers.extractors.LoggedInUser;
 import org.fjorum.controllers.filters.LoggedInFilter;
 import org.fjorum.controllers.filters.ModAdminAuthorizationFilter;
 import org.fjorum.models.Category;
@@ -16,7 +17,6 @@ import org.fjorum.models.Topic;
 import org.fjorum.models.User;
 import org.fjorum.services.CategoryService;
 import org.fjorum.services.TopicService;
-import org.fjorum.services.UserMessages;
 import org.fjorum.services.UserService;
 import org.fjorum.util.Optionals;
 import org.slf4j.Logger;
@@ -43,14 +43,10 @@ public class ForumController {
 
     @Get("/forum")
     @UnitOfWork
-    public Result forum(Session session) {
-        User user = Optional.ofNullable(session.get(UserMessages.USER_ID)).
-                map(Long::valueOf).
-                flatMap(userService::findUserById).orElse(User.GUEST);
-
+    public Result forum(Session session, @LoggedInUser Optional<User> user) {
         return Results.html().
                 render("categories", categoryService.findAllCategories()).
-                render("user", user);
+                render("user", user.orElse(User.GUEST));
     }
 
     @Post("/forum/categoryCreate")

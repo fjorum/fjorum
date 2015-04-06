@@ -1,4 +1,4 @@
-package org.fjorum.controllers.annotation;
+package org.fjorum.controllers.annotations;
 
 import ninja.Router;
 

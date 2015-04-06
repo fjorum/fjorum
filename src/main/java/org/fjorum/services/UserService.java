@@ -3,6 +3,7 @@ package org.fjorum.services;
 import ninja.session.Session;
 import ninja.utils.NinjaProperties;
 import org.fjorum.models.User;
+import org.fjorum.util.Optionals;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Optional.*;
 
 @Singleton
 public class UserService {
@@ -150,7 +152,7 @@ public class UserService {
 
     public Optional<User> findUserById(Long id) {
         EntityManager entityManager = entitiyManagerProvider.get();
-        return Optional.ofNullable(entityManager.find(User.class, id));
+        return ofNullable(entityManager.find(User.class, id));
     }
 
     public Optional<User> findUserByEmailOrName(String emailOrName) {
@@ -183,8 +185,8 @@ public class UserService {
         q.setMaxResults(1);
         @SuppressWarnings("unchecked") List<User> resultList = (List<User>) q.getResultList();
         return resultList.isEmpty()
-                ? Optional.empty()
-                : Optional.of(resultList.get(0));
+                ? empty()
+                : of(resultList.get(0));
     }
 
 
@@ -204,12 +206,9 @@ public class UserService {
     }
 
     public Optional<User> findUserBySession(Session session) {
-        String idString = session.get(UserMessages.USER_ID);
-        if (!isNullOrEmpty(idString)) try {
-            return findUserById(Long.valueOf(idString));
-        } catch (NumberFormatException ex) {
-            /* ignore */
-        }
-        return Optional.<User>empty();
+        return ofNullable(session).
+                flatMap(s -> ofNullable(s.get(UserMessages.USER_ID))).
+                flatMap(Optionals.tryIf(Long::valueOf)).
+                flatMap(this::findUserById);
     }
 }
