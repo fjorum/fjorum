@@ -1,12 +1,12 @@
 package org.fjorum.controllers;
 
 import com.google.inject.persist.Transactional;
-import ninja.Context;
 import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
-import ninja.session.Session;
+import ninja.params.Param;
+import ninja.session.FlashScope;
 import org.fjorum.controllers.annotations.Get;
 import org.fjorum.controllers.annotations.Post;
 import org.fjorum.controllers.extractors.LoggedInUser;
@@ -43,7 +43,7 @@ public class ForumController {
 
     @Get("/forum")
     @UnitOfWork
-    public Result forum(Session session, @LoggedInUser Optional<User> user) {
+    public Result forum(@LoggedInUser Optional<User> user) {
         return Results.html().
                 render("categories", categoryService.findAllCategories()).
                 render("user", user.orElse(User.GUEST));
@@ -52,19 +52,21 @@ public class ForumController {
     @Post("/forum/categoryCreate")
     @Transactional
     @FilterWith(ModAdminAuthorizationFilter.class)
-    public Result categoryCreate(Context context) {
-        categoryService.createNewCategory(context.getParameter("name"));
+    public Result categoryCreate(
+            @Param("name") String name) {
+        categoryService.createNewCategory(name);
         return Results.redirect("/forum");
     }
 
     @Post("/forum/categoryUp")
     @Transactional
     @FilterWith(ModAdminAuthorizationFilter.class)
-    public Result categoryUp(Context context) {
+    public Result categoryUp(
+            @Param("category_id") String categoryId) {
         try {
-            Long categoryId = Long.valueOf(context.getParameter("category_id"));
-            Optional<Category> category = categoryService.findCategoryById(categoryId);
-            category.ifPresent(categoryService::up);
+            categoryService.
+                    findCategoryById(Long.valueOf(categoryId)).
+                    ifPresent(categoryService::up);
         } catch (Exception ex) {
             logger.error("category up for unknown category", ex);
         }
@@ -75,11 +77,12 @@ public class ForumController {
     @Post("/forum/categoryDown")
     @Transactional
     @FilterWith(ModAdminAuthorizationFilter.class)
-    public Result categoryDown(Context context) {
+    public Result categoryDown(
+            @Param("category_id") String categoryId) {
         try {
-            Long categoryId = Long.valueOf(context.getParameter("category_id"));
-            Optional<Category> category = categoryService.findCategoryById(categoryId);
-            category.ifPresent(categoryService::down);
+            categoryService.
+                    findCategoryById(Long.valueOf(categoryId)).
+                    ifPresent(categoryService::down);
         } catch (Exception ex) {
             logger.error("category down for unknown category", ex);
         }
@@ -89,15 +92,16 @@ public class ForumController {
 
     @Get("/forum/category")
     @UnitOfWork
-    public Result category(Context context) {
+    public Result category(
+            FlashScope flashScope,
+            @Param("id") String categoryId) {
         try {
-            Long categoryId = Long.valueOf(context.getParameter("id"));
-            Category category = categoryService.findCategoryById(categoryId).get();
+            Category category = categoryService.findCategoryById(Long.valueOf(categoryId)).get();
             List<Topic> topics = topicService.findTopicByCategory(category);
             return Results.html().render("category", category).render("topics", topics);
         } catch (Exception ex) {
             logger.error("selected unknown category", ex);
-            context.getFlashScope().error("forum.category.flash.error");
+            flashScope.error("forum.category.flash.error");
             return Results.redirect("/forum");
         }
     }
@@ -105,16 +109,15 @@ public class ForumController {
     @Post("/forum/topicCreate")
     @UnitOfWork
     @FilterWith(LoggedInFilter.class)
-    public Result topicCreate(Context context) {
+    public Result topicCreate(
+            @Param("category_id") String categoryId,
+            @Param("name") String name,
+            @LoggedInUser Optional<User> user) {
         try {
-            Long categoryId = Long.valueOf(context.getParameter("category_id"));
-            String name = context.getParameter("name");
             return Optionals.lift2((Category c, User u) -> topicCreateTX(c, u, name)).
-                    apply(categoryService.findCategoryById(categoryId),
-                            userService.findUserBySession(context.getSession())).
-                    map(topic -> Results.redirect("/forum/topic?id=" + topic.getId())).orElse(
-                    Results.redirect("/forum")
-            );
+                    apply(categoryService.findCategoryById(Long.valueOf(categoryId)), user).
+                    map(topic -> Results.redirect("/forum/topic?id=" + topic.getId())).
+                    orElse(Results.redirect("/forum"));
         } catch (Exception ex) {
             logger.error("ups...", ex);
         }
@@ -130,14 +133,15 @@ public class ForumController {
 
     @Get("/forum/topic")
     @UnitOfWork
-    public Result topic(Context context) {
+    public Result topic(
+            FlashScope flashScope,
+            @Param("id") String topicId) {
         try {
-            Long topicId = Long.valueOf(context.getParameter("id"));
-            Topic topic = topicService.findTopicById(topicId).get();
+            Topic topic = topicService.findTopicById(Long.valueOf(topicId)).get();
             return Results.html().render("topic", topic);
         } catch (Exception ex) {
             logger.error("selected unknown topic", ex);
-            context.getFlashScope().error("forum.topic.flash.error");
+            flashScope.error("forum.topic.flash.error");
             return Results.redirect("/forum");
         }
     }

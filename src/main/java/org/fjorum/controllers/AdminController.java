@@ -1,11 +1,11 @@
 package org.fjorum.controllers;
 
 import com.google.inject.persist.Transactional;
-import ninja.Context;
 import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
+import ninja.params.Param;
 import org.fjorum.controllers.annotations.Get;
 import org.fjorum.controllers.annotations.Post;
 import org.fjorum.controllers.filters.AdminAuthorizationFilter;
@@ -35,14 +35,14 @@ public class AdminController {
     @Post("/admin/userCreate")
     @Transactional
     @FilterWith(AdminAuthorizationFilter.class)
-    public Result userCreate(Context context) {
+    public Result userCreate(
+            @Param("name") String name,
+            @Param("email") String email,
+            @Param("password") String password) {
         try {
-            boolean success = userService.createNewUser(
-                    context.getParameter("name"),
-                    context.getParameter("email"),
-                    context.getParameter("password"),
-                    null);
-            return success ? Results.redirect("/admin") : Results.redirect("/errors");
+            return userService.createNewUser(name, email, password, null)
+                    ? Results.redirect("/admin")
+                    : Results.redirect("/errors");
         } catch (ServiceException ex) {
             logger.error("oops", ex);
             return Results.redirect("/errors");
@@ -52,10 +52,10 @@ public class AdminController {
     @Post("/admin/userRemove")
     @Transactional
     @FilterWith(AdminAuthorizationFilter.class)
-    public Result userRemove(Context context) {
+    public Result userRemove(
+            @Param("userId") String userId) {
         try {
-            Long userId = Long.valueOf(context.getParameter("userId"));
-            userService.removeUser(userId);
+            userService.removeUser(Long.valueOf(userId));
             return Results.redirect("/admin");
         } catch (ServiceException ex) {
             logger.error("oops", ex);
@@ -66,15 +66,20 @@ public class AdminController {
     @Post("/admin/userChange")
     @Transactional
     @FilterWith(AdminAuthorizationFilter.class)
-    public Result userChange(Context context) {
+    public Result userChange(
+            @Param("userId") String userId,
+            @Param("name") String name,
+            @Param("email") String email,
+            @Param("active") String active,
+            @Param("moderator") String moderator,
+            @Param("administrator") String administrator) {
         try {
-            Long userId = Long.valueOf(context.getParameter("userId"));
-            userService.findUserById(userId).ifPresent(user -> {
-                user.setName(context.getParameter("name"));
-                user.setEmail(context.getParameter("email"));
-                user.setActive(context.getParameter("active") != null);
-                user.setModerator(context.getParameter("moderator") != null);
-                user.setAdministrator(context.getParameter("administrator") != null);
+            userService.findUserById(Long.valueOf(userId)).ifPresent(user -> {
+                user.setName(name);
+                user.setEmail(email);
+                user.setActive(active != null);
+                user.setModerator(moderator != null);
+                user.setAdministrator(administrator != null);
                 userService.save(user);
             });
             return Results.redirect("/admin");
