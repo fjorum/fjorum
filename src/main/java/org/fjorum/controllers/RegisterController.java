@@ -240,23 +240,17 @@ public class RegisterController {
             emailErrorMessage = null;
             passwordErrorMessage = null;
         }
-
     }
 
     private String createWebSafeUuid() {
-
         try {
-
             UUID uuid = UUID.randomUUID();
             byte[] uuidAsBytes = uuid.toString().getBytes("UTF-8");
             return BaseEncoding.base64Url().encode(uuidAsBytes);
-
         } catch (UnsupportedEncodingException unsupportedEncodingException) {
             String message = "There is something really wrong. We cannot use UTF-8 encoding. Stopping.";
             logger.error(message, unsupportedEncodingException);
-            throw new RuntimeException(
-                    message,
-                    unsupportedEncodingException);
+            throw new RuntimeException(message, unsupportedEncodingException);
         }
 
     }

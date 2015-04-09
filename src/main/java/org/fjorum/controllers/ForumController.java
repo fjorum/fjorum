@@ -1,12 +1,11 @@
 package org.fjorum.controllers;
 
-import com.google.inject.persist.Transactional;
-import ninja.FilterWith;
-import ninja.Result;
-import ninja.Results;
-import ninja.jpa.UnitOfWork;
-import ninja.params.Param;
-import ninja.session.FlashScope;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.fjorum.controllers.annotations.Get;
 import org.fjorum.controllers.annotations.Post;
 import org.fjorum.controllers.extractors.LoggedInUser;
@@ -16,16 +15,20 @@ import org.fjorum.models.Category;
 import org.fjorum.models.Topic;
 import org.fjorum.models.User;
 import org.fjorum.services.CategoryService;
+import org.fjorum.services.ReplyService;
 import org.fjorum.services.TopicService;
-import org.fjorum.services.UserService;
 import org.fjorum.util.Optionals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.List;
-import java.util.Optional;
+import com.google.inject.persist.Transactional;
+
+import ninja.FilterWith;
+import ninja.Result;
+import ninja.Results;
+import ninja.jpa.UnitOfWork;
+import ninja.params.Param;
+import ninja.session.FlashScope;
 
 @Singleton
 public class ForumController {
@@ -33,13 +36,13 @@ public class ForumController {
     private Logger logger = LoggerFactory.getLogger(ForumController.class);
 
     @Inject
-    private UserService userService;
-
-    @Inject
     private CategoryService categoryService;
 
     @Inject
     private TopicService topicService;
+
+    @Inject
+    private ReplyService replyService;
 
     @Get("/forum")
     @UnitOfWork
@@ -136,14 +139,34 @@ public class ForumController {
     public Result topic(
             FlashScope flashScope,
             @Param("id") String topicId) {
-        try {
-            Topic topic = topicService.findTopicById(Long.valueOf(topicId)).get();
-            return Results.html().render("topic", topic);
-        } catch (Exception ex) {
-            logger.error("selected unknown topic", ex);
-            flashScope.error("forum.topic.flash.error");
-            return Results.redirect("/forum");
-        }
+        return topicService.findTopicById(Long.valueOf(topicId)).
+                map(topic ->
+                        Results.html().
+                                render("topic", topic).
+                                render("replies", replyService.findRepliesByTopic(topic))).
+                orElseGet(() -> {
+                    flashScope.error("forum.topic.flash.error");
+                    return Results.redirect("/forum");
+                });
     }
+
+    @Post("/forum/replyCreate")
+    @Transactional
+    @FilterWith(LoggedInFilter.class)
+    public Result replyCreate(
+            @Param("topic_id") String topicId,
+            @Param("content") String content,
+            @LoggedInUser Optional<User> user) {
+        try {
+            return Optionals.lift2((Topic t, User u) -> replyService.createNewReply(t, u, content)).
+                    apply(topicService.findTopicById(Long.valueOf(topicId)), user).
+                    map(reply -> Results.redirect("/forum/topic?id=" + topicId)).
+                    orElse(Results.redirect("/forum"));
+        } catch (Exception ex) {
+            logger.error("ups...", ex);
+        }
+        return Results.redirect("/forum");
+    }
+
 
 }

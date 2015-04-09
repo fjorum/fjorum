@@ -28,7 +28,14 @@ public class Reply {
     @Column(name = "reply_content")
     private String content;
 
-    public Reply() {
+    protected Reply() {
+    }
+
+    public Reply(Topic topic, User user, String content) {
+        this.topic = topic;
+        this.user = user;
+        this.content = content;
+        this.created = LocalDateTime.now();
     }
 
     public Long getId() {

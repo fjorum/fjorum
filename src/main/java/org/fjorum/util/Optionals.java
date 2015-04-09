@@ -1,5 +1,7 @@
 package org.fjorum.util;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -16,6 +18,25 @@ public final class Optionals {
                 return Optional.ofNullable(fn.apply(a));
             } catch (RuntimeException ex) {
                 return Optional.empty();
+            }
+        };
+    }
+
+    public static <A> Iterable<A> iterable(Optional<A> optional) {
+        return () -> new Iterator<A>() {
+
+            private Optional<A> opt = optional;
+
+            @Override
+            public boolean hasNext() {
+                return opt.isPresent();
+            }
+
+            @Override
+            public A next() {
+                A a = opt.orElseThrow(NoSuchElementException::new);
+                opt = Optional.empty();
+                return a;
             }
         };
     }

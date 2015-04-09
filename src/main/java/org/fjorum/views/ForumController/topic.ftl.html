@@ -3,4 +3,24 @@
 
 <h1>${topic.name}</h1>
 
+    <#list replies as r>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            ${r.user.name} ${r.created}
+        </div>
+        <div class="panel-body">
+            ${r.content}
+        </div>
+    </div>
+    </#list>
+
+    <#if  (session.user_id)??>
+    <p>Add Reply</p>
+    <form role="form" method="post" action="/forum/replyCreate">
+        <input type="hidden" name="topic_id" value="${topic.id}"/>
+        <textarea name="content" rows="10" cols="100"></textarea> <br/>
+        <button type="submit" class="btn btn-sm">Reply</button>
+    </form>
+    </#if>
+
 </@layout.myLayout>

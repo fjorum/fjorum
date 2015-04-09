@@ -45,13 +45,11 @@ public class IndexController {
                 : userService.findUserByEmailOrName(emailOrName)).
 
                 filter(user -> userService.isPasswordValid(user, passwordPlainText)).
-
                 map(user -> {
                     session.put(UserMessages.USER_ID, user.getId().toString());
                     flashScope.success(UserMessages.USER_LOGIN_FLASH_SUCCESS);
                     return Results.redirect("/index");
                 }).
-
                 orElseGet(() -> {
                     flashScope.put("email", emailOrName);
                     flashScope.error(UserMessages.USER_LOGIN_FLASH_ERROR);

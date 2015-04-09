@@ -6,6 +6,8 @@ import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
 import ninja.params.Param;
+import ninja.session.FlashScope;
+
 import org.fjorum.controllers.annotations.Get;
 import org.fjorum.controllers.annotations.Post;
 import org.fjorum.controllers.filters.AdminAuthorizationFilter;

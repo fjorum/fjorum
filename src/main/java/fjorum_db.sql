@@ -11,7 +11,7 @@ CREATE TABLE reply
   topic_id      BIGINT             NOT NULL,
   user_id       BIGINT             NOT NULL,
   created       TIMESTAMP          NOT NULL,
-  modified      TIMESTAMP          NOT NULL,
+  modified      TIMESTAMP          NULL,
   reply_content VARCHAR            NOT NULL
 );
 
