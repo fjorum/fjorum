@@ -111,4 +111,8 @@ public class User {
 
     public static final User GUEST = new User("", "", "", null);
 
+    static {
+        GUEST.setActive(false);
+    }
+
 }

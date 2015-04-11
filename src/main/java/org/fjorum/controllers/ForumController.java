@@ -1,11 +1,12 @@
 package org.fjorum.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.inject.persist.Transactional;
+import ninja.FilterWith;
+import ninja.Result;
+import ninja.Results;
+import ninja.jpa.UnitOfWork;
+import ninja.params.Param;
+import ninja.session.FlashScope;
 import org.fjorum.controllers.annotations.Get;
 import org.fjorum.controllers.annotations.Post;
 import org.fjorum.controllers.extractors.LoggedInUser;
@@ -21,14 +22,10 @@ import org.fjorum.util.Optionals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.persist.Transactional;
-
-import ninja.FilterWith;
-import ninja.Result;
-import ninja.Results;
-import ninja.jpa.UnitOfWork;
-import ninja.params.Param;
-import ninja.session.FlashScope;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class ForumController {
@@ -97,11 +94,15 @@ public class ForumController {
     @UnitOfWork
     public Result category(
             FlashScope flashScope,
-            @Param("id") String categoryId) {
+            @Param("id") String categoryId,
+            @LoggedInUser Optional<User> user) {
         try {
             Category category = categoryService.findCategoryById(Long.valueOf(categoryId)).get();
             List<Topic> topics = topicService.findTopicByCategory(category);
-            return Results.html().render("category", category).render("topics", topics);
+            return Results.html().
+                    render("category", category).
+                    render("topics", topics).
+                    render("user", user.orElse(User.GUEST));
         } catch (Exception ex) {
             logger.error("selected unknown category", ex);
             flashScope.error("forum.category.flash.error");
@@ -162,6 +163,23 @@ public class ForumController {
                     apply(topicService.findTopicById(Long.valueOf(topicId)), user).
                     map(reply -> Results.redirect("/forum/topic?id=" + topicId)).
                     orElse(Results.redirect("/forum"));
+        } catch (Exception ex) {
+            logger.error("ups...", ex);
+        }
+        return Results.redirect("/forum");
+    }
+
+    @Post("/forum/topicSwitchOpen")
+    @Transactional
+    @FilterWith(ModAdminAuthorizationFilter.class)
+    public Result topicSwitchOpen(
+            @Param("topic_id") String topicId) {
+        try {
+            return topicService.findTopicById(Long.valueOf(topicId)).map(topic -> {
+                topic.setOpen(!topic.isOpen());
+                topicService.save(topic);
+                return Results.redirect("/forum/category?id=" + topic.getCategory().getId());
+            }).orElseGet(() -> Results.redirect("/forum"));
         } catch (Exception ex) {
             logger.error("ups...", ex);
         }

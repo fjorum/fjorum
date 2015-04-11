@@ -1,18 +1,33 @@
 <#import "../layout/defaultLayout.ftl.html" as layout>
 <@layout.myLayout "Forum" 1>
 
+<ol class="breadcrumb">
+    <li><a href="/forum">Forum</a></li>
+    <li class="active">${category.name}</li>
+</ol>
+
 <h1>${category.name}</h1>
     <#list topics as t>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-xs-2">
+                <div class="col-xs-3">
                     <a href="/forum/topic?id=${t.id}">${t.name}</a>
+                    <#if (!t.open)>(closed)</#if>
                 </div>
+                <#if (session.user_id)?? && user.isActive() && (user.isAdministrator() || user.isModerator())>
+                    <div class="col-xs-2">
+                        <form role="form" method="post" action="/forum/topicSwitchOpen">
+                            <input type="hidden" name="topic_id" value="${t.id}"/>
+                            <button type="submit" class="btn btn-sm"><#if (t.open)>Close<#else>Reopen</#if>Topic
+                            </button>
+                        </form>
+                    </div>
+                </#if>
             </div>
         </div>
         <div class="panel-body">
-            <p>TODO Some information about the topic: topic created, sticky..</p>
+            <p>Created: ${t.created}</p>
         </div>
     </div>
     </#list>

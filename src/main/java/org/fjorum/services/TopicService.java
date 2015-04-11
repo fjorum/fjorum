@@ -39,4 +39,9 @@ public class TopicService {
         Topic topic = entityManager.find(Topic.class, id);
         return Optional.ofNullable(topic);
     }
+
+    public void save(Topic topic) {
+        EntityManager entityManager = entitiyManagerProvider.get();
+        entityManager.persist(topic);
+    }
 }

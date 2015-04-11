@@ -1,7 +1,13 @@
 <#import "../layout/defaultLayout.ftl.html" as layout>
 <@layout.myLayout "Forum" 1>
 
-<h1>${topic.name}</h1>
+<ol class="breadcrumb">
+    <li><a href="/forum">Forum</a></li>
+    <li><a href="/forum/category?id=${topic.category.id}">${topic.category.name}</a></li>
+    <li class="active">${topic.name}</li>
+</ol>
+
+<h1>${topic.name} <#if (!topic.open)>(closed)</#if></h1>
 
     <#list replies as r>
     <div class="panel panel-default">
@@ -14,7 +20,7 @@
     </div>
     </#list>
 
-    <#if  (session.user_id)??>
+    <#if  (session.user_id)?? && topic.open >
     <p>Add Reply</p>
     <form role="form" method="post" action="/forum/replyCreate">
         <input type="hidden" name="topic_id" value="${topic.id}"/>
