@@ -17,6 +17,7 @@
 package controllers;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ninja.NinjaDocTester;
@@ -26,6 +27,7 @@ import org.doctester.testbrowser.Response;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
+@Ignore
 public class ApiControllerDocTesterTest extends NinjaDocTester {
     
     String URL_INDEX = "/";
