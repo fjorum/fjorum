@@ -1,25 +1,24 @@
 package org.fjorum.util;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Predicates {
 
     @SafeVarargs
-    public static <A> Predicate<A> or(Predicate<A> ... predicates) {
-        Optional<Predicate<A>> result = Optional.empty();
-        for(Predicate<A> predicate : predicates) {
-            result = result.map(r -> r.or(predicate));
+    public static <A> Predicate<A> or(Predicate<A>... predicates) {
+        Predicate<A> result = a -> false;
+        for (Predicate<A> predicate : predicates) {
+            result = result.or(predicate);
         }
-        return result.orElseGet(() -> a -> false);
+        return result;
     }
 
     @SafeVarargs
-    public static <A> Predicate<A> and(Predicate<A> ... predicates) {
-        Optional<Predicate<A>> result = Optional.empty();
-        for(Predicate<A> predicate : predicates) {
-            result = result.map(r -> r.and(predicate));
+    public static <A> Predicate<A> and(Predicate<A>... predicates) {
+        Predicate<A> result = a -> true;
+        for (Predicate<A> predicate : predicates) {
+            result = result.and(predicate);
         }
-        return result.orElseGet(() -> a -> true);
+        return result;
     }
 }
