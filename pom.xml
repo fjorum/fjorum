@@ -13,6 +13,7 @@
     <properties>
         <ninja.version>4.0.5</ninja.version>
         <jetty.version>9.2.3.v20140905</jetty.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
