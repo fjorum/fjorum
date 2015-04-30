@@ -2,3 +2,4 @@
 fjorum.iml
 .idea/**
 target
+db/**
