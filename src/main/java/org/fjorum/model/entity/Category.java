@@ -11,8 +11,8 @@ public class Category {
     private Long id;
     @Column(name = "cat_name")
     private String name;
-    @Column(name = "sort_order")
-    private int sortOrder;
+    @Column(name = "order_id")
+    private int orderId;
 
     protected Category() {
     }
@@ -37,11 +37,11 @@ public class Category {
         this.name = name;
     }
 
-    public int getSortOrder() {
-        return sortOrder;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setSortOrder(int sortOrder) {
-        this.sortOrder = sortOrder;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

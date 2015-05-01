@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("SELECT c FROM Category c WHERE c.sortOrder<:sortOrder ORDER BY c.sortOrder DESC")
+    @Query("SELECT c FROM Category c WHERE c.orderId<:orderId ORDER BY c.orderId DESC")
     Category findAbove(int sortOrder);
 
-    @Query("SELECT c FROM Category c WHERE c.sortOrder>:sortOrder ORDER BY c.sortOrder")
-    Category findBelow(int sortOrder);
+    @Query("SELECT c FROM Category c WHERE c.orderId>:orderId ORDER BY c.orderId")
+    Category findBelow(int orderId);
 }

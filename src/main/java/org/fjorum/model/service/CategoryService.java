@@ -19,7 +19,7 @@ public class CategoryService {
     public Category createNewCategory(String name) {
         Category last = categoryRepository.findBelow(Integer.MAX_VALUE);
         Category category = new Category(name);
-        category.setSortOrder(last.getSortOrder() + 1);
+        category.setOrderId(last.getOrderId() + 1);
         categoryRepository.save(category);
         return category;
     }
@@ -29,22 +29,22 @@ public class CategoryService {
     }
 
     public void up(Category category) {
-        Category smaller = categoryRepository.findBelow(category.getSortOrder());
+        Category smaller = categoryRepository.findBelow(category.getOrderId());
         if (smaller != null) {
-            int temp = smaller.getSortOrder();
-            smaller.setSortOrder(category.getSortOrder());
-            category.setSortOrder(temp);
+            int temp = smaller.getOrderId();
+            smaller.setOrderId(category.getOrderId());
+            category.setOrderId(temp);
             categoryRepository.save(category);
             categoryRepository.save(smaller);
         }
     }
 
     public void down(Category category) {
-        Category bigger = categoryRepository.findAbove(category.getSortOrder());
+        Category bigger = categoryRepository.findAbove(category.getOrderId());
         if (bigger != null) {
-            int temp = bigger.getSortOrder();
-            bigger.setSortOrder(category.getSortOrder());
-            category.setSortOrder(temp);
+            int temp = bigger.getOrderId();
+            bigger.setOrderId(category.getOrderId());
+            category.setOrderId(temp);
             categoryRepository.save(category);
             categoryRepository.save(bigger);
         }
