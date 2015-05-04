@@ -4,14 +4,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 public class IndexController {
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model) {
+    @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
+    public String index(Model model,
+            @RequestParam Optional<String> error) {
+        error.ifPresent(msg -> model.addAttribute("error", msg));
         model.addAttribute("message", "Hello Fjorum!");
         return "index";
     }
@@ -38,7 +43,7 @@ public class IndexController {
                 });
     } */
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @RequestMapping(value = "/loggedOut", method = RequestMethod.GET)
     public String logout(RedirectAttributes redirectAttributes) {
         FlashMessage.SUCCESS.put(redirectAttributes, "user.logout.flash.success");
         return ("redirect:/");

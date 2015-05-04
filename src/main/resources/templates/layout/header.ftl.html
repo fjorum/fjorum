@@ -11,17 +11,25 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li <#if activeNavLink == 1>class="active"</#if>><a href="/forum"><@spring.message "header.forum"/></a></li>
+                <li <#if activeNavLink == 1>class="active"</#if>><a href="/forum"><@spring.message "header.forum"/></a>
+                </li>
             </ul>
             <ul class="nav navbar-nav">
-                <li <#if activeNavLink == 2>class="active"</#if>><a href="/profile"><@spring.message "header.profile" /></a></li>
+                <li <#if activeNavLink == 2>class="active"</#if>><a
+                        href="/profile"><@spring.message "header.profile" /></a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li <#if activeNavLink == 3>class="active"</#if>><a href="/admin"><@spring.message "header.admin" /></a></li>
+                <li <#if activeNavLink == 3>class="active"</#if>><a href="/admin"><@spring.message "header.admin" /></a>
+                </li>
             </ul>
-        <#if (session.user_id)??>
+        <#if (currentUser)??>
             <ul class="nav navbar-nav">
-                <li><a href="/index/logout">Logout</a></li>
+                <li>
+                    <form action="/logout" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
             </ul>
         </#if>
         </div>

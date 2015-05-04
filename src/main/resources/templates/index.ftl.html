@@ -13,9 +13,10 @@
 <div class="panel panel-default">
     <div class="panel-heading"><@spring.message "index.login"/></div>
     <div class="panel-body">
-        <form role="form" action="/index" method="post">
+        <form role="form" action="/login" method="post">
             <div class="row">
                 <div class="col-md-5">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <label for="name"><@spring.message "entity.userEmailOrName"/></label>
                     <input class="form-control" type="text" id="emailOrName" name="emailOrName"/>
                     <br/>
