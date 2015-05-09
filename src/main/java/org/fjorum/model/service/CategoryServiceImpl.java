@@ -22,11 +22,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category createNewCategory(String name) {
-        Category last = categoryRepository.findBelow(Integer.MAX_VALUE);
-        Category category = new Category(name);
-        category.setOrderId(last.getOrderId() + 1);
-        categoryRepository.save(category);
+    public Category createNewCategory(String name, Category parent) {
+        Category category = new Category(name, parent);
+        parent.getChildren().add(category);
+        categoryRepository.save(parent);
         return category;
     }
 
@@ -37,26 +36,26 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void up(Category category) {
-        Category smaller = categoryRepository.findBelow(category.getOrderId());
+        /*Category smaller = categoryRepository.findBelow(category.getOrderId());
         if (smaller != null) {
             int temp = smaller.getOrderId();
             smaller.setOrderId(category.getOrderId());
             category.setOrderId(temp);
             categoryRepository.save(category);
             categoryRepository.save(smaller);
-        }
+        } */
     }
 
     @Override
     public void down(Category category) {
-        Category bigger = categoryRepository.findAbove(category.getOrderId());
+        /*Category bigger = categoryRepository.findAbove(category.getOrderId());
         if (bigger != null) {
             int temp = bigger.getOrderId();
             bigger.setOrderId(category.getOrderId());
             category.setOrderId(temp);
             categoryRepository.save(category);
             categoryRepository.save(bigger);
-        }
+        } */
     }
 
     @Override

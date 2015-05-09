@@ -11,6 +11,7 @@
         <form role="form" action="/admin/userCreate" method="post">
             <div class="row">
                 <div class="col-md-5">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <label for="name"> <@spring.message "entity.userName" /> </label>
                     <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
                     <br/>

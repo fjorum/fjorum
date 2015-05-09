@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
     private final UserService userService;
@@ -16,6 +18,7 @@ public class CurrentUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public CurrentUser loadUserByUsername(String nameOrEmail) throws UsernameNotFoundException {
         User user = userService.getUserByNameOrEmail(nameOrEmail)
                 .orElseThrow(() ->

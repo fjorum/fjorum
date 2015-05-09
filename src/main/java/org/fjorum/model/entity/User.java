@@ -1,6 +1,7 @@
 package org.fjorum.model.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +22,13 @@ public class User {
     @Column(name = "email")
     private String email;
     @Column(name = "active")
-    private Boolean active = Boolean.TRUE;
+    private boolean active = true;
+
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="user_role",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="role_id"))
+    private Set<Role> roles;
 
     protected User() {
     }
@@ -81,12 +88,19 @@ public class User {
         this.recoverPasswordCode = recoverPasswordCode;
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

@@ -2,12 +2,14 @@ package org.fjorum.model.service;
 
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.model.entity.User;
+import org.fjorum.model.repository.RoleRepository;
 import org.fjorum.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -28,9 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByNameOrEmail(String nameOrEmail) {
-        return nameOrEmail.contains("@")
+        Optional<User> user = nameOrEmail.contains("@")
                 ? userRepository.findOneByEmail(nameOrEmail)
                 : userRepository.findOneByName(nameOrEmail);
+        return user;
     }
 
     @Override
@@ -44,4 +49,5 @@ public class UserServiceImpl implements UserService {
         User user = new User(form.getName(), form.getEmail(), passwordHash, null);
         return userRepository.save(user);
     }
+
 }

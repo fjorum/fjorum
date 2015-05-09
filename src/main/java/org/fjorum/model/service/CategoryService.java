@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    Category createNewCategory(String name);
+    Category createNewCategory(String name, Category parent);
 
     void removeCategory(Category category);
 
