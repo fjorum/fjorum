@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
@@ -18,7 +18,7 @@ public class CurrentUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CurrentUser loadUserByUsername(String nameOrEmail) throws UsernameNotFoundException {
         User user = userService.getUserByNameOrEmail(nameOrEmail)
                 .orElseThrow(() ->
