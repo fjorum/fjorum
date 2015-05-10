@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <title>Head for Thymeleaf templates</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <!-- Le styles -->
+    <link href="/webjars/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+
+    <style type="text/css">
+        body {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+
+        .navbar {
+            margin-left: -200px;
+            margin-right: -200px;
+        }
+
+        .error-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div th:fragment="header (nav)">
+    <div class="navbar navbar-inverse navbar-predefined-top">
+        <div class="container">
+            <div class="navbar-header">
+                <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>-->
+                <a class="navbar-brand" href="/" th:text="#{header.forum.name}">Hitchhiker's Forum</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li th:class="${nav} == 'forum' ? 'active' : ''">
+                        <a href="/forum" th:text="#{header.forum}">Forum</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li th:class="${nav} == 'profile' ? 'active' : ''">
+                        <a href="/profile" th:text="#{header.profile}">Profile</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li th:class="${nav} == 'admin' ? 'active' : ''">
+                        <a href="/admin" th:text="#{header.admin}">Admin</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav" th:if="${currentUser}">
+                    <li>
+                        <a href="/logoutForm" th:text="#{header.logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.navbar-collapse -->
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="flashMessage">
+    <div class="container" th:if="${flash}">
+        <div class="alert alert-danger" th:if="${flash.get('error')} != null" th:text="#{${flash.error}}">
+            Danger, Will Robinson!
+        </div>
+
+        <div class="alert alert-success" th:if="${flash.get('success')} != null" th:text="#{${flash.success}}">
+            That's how it's done!
+        </div>
+
+        <div class="alert alert-warning" th:if="${flash.get('warning')} != null" th:text="#{${flash.warning}}">
+            Don't run with scissors!
+        </div>
+    </div>
+</div>
+
+<form>
+    <input th:fragment="csrf" type="hidden" name="csrf.parameterName" value="csrf.token"
+           th:attr="name=${_csrf.parameterName}, value=${_csrf.token}"/>
+</form>
+
+<div th:fragment="footer">
+    <hr/>
+    <footer th:if="${currentUser}" th:text="'Logged in as ' + ${currentUser.name}">
+        Logged in as John Doe
+    </footer>
+    <footer th:unless="${currentUser}" th:text="'You are not logged in'">
+        You are not logged in
+    </footer>
+</div>
+
+<div th:fragment="bottomScripts">
+    <script type="text/javascript" src="/webjars/jquery/2.1.3/jquery.js"></script>
+    <script type="text/javascript" src="/webjars/tinymce-jquery/4.1.7-1/jscripts/tiny_mce/tiny_mce.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

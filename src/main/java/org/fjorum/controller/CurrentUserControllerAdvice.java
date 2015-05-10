@@ -1,5 +1,6 @@
 package org.fjorum.controller;
 
+import org.fjorum.model.service.CurrentUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,6 @@ public class CurrentUserControllerAdvice {
     public UserDetails getCurrentUser(Authentication authentication) {
         return authentication == null
                 ? null
-                : (UserDetails) authentication.getPrincipal();
+                : (CurrentUser) authentication.getPrincipal();
     }
 }

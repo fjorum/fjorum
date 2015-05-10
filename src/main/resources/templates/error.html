@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <object th:include="fragments :: head" th:remove="tag" />
+</head>
+<body>
+<div th:replace="fragments :: header ('error')">Header</div>
+
+<h1>Ups!</h1>
+<p>Etwas ist schief gegangen!</p>
+
+<p th:text="'Error: ' + ${error}">Error: OutOfCoffee</p>
+<p th:text="'Status: ' + ${status}">Status: 0815</p>
+<p th:text="'Message: ' + ${message}">Message: Coffee is out! Panic! We will all die!!!11!</p>
+
+<div th:replace="fragments :: footer">Footer</div>
+<div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <object th:include="fragments :: head" th:remove="tag" />
+</head>
+<body>
+<div th:replace="fragments :: header ('logout')">Header</div>
+
+<h1>Do you want to logout?</h1>
+<form action="/logout" method="post">
+    <div th:replace="fragments :: csrf"></div>
+    <button class="btn btn-primary btn-lg" type="submit" th:text="#{header.logout}">Logout</button>
+</form>
+
+<div th:replace="fragments :: footer">Footer</div>
+<div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
+</body>
+</html>

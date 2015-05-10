@@ -15,8 +15,12 @@ public class IndexController {
 
     @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
     public String index(Model model,
-            @RequestParam Optional<String> error) {
-        error.ifPresent(msg -> model.addAttribute("error", msg));
+                        @RequestParam Optional<String> error,
+                        @RequestParam Optional<String> authenticated) {
+        error.ifPresent(msg ->
+                FlashMessage.ERROR.put(model, "user.login.flash.error"));
+        authenticated.ifPresent(msg ->
+                FlashMessage.SUCCESS.put(model, "user.login.flash.success"));
         model.addAttribute("message", "Hello Fjorum!");
         return "index";
     }
@@ -44,9 +48,14 @@ public class IndexController {
     } */
 
     @RequestMapping(value = "/loggedOut", method = RequestMethod.GET)
-    public String logout(RedirectAttributes redirectAttributes) {
+    public String loggedOut(RedirectAttributes redirectAttributes) {
         FlashMessage.SUCCESS.put(redirectAttributes, "user.logout.flash.success");
         return ("redirect:/");
+    }
+
+    @RequestMapping(value = "/logoutForm", method = RequestMethod.GET)
+    public String logout() {
+        return "logoutForm";
     }
 
 }

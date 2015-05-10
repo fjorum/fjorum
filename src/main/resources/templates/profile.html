@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <object th:include="fragments :: head" th:remove="tag" />
+</head>
+<body>
+<div th:replace="fragments :: header ('profile')">Header</div>
+<div th:replace="fragments :: flashMessage">Flash-Message</div>
+
+<h1>Dein Profil!</h1>
+<p>TODO Passwort ändern</p>
+
+<div th:replace="fragments :: footer">Footer</div>
+<div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
+</body>
+</html>

@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class CurrentUserDetailsService implements UserDetailsService {
+public class CurrentUserDetailsServiceImpl implements UserDetailsService {
     private final UserService userService;
 
     @Autowired
-    public CurrentUserDetailsService(UserService userService) {
+    public CurrentUserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
