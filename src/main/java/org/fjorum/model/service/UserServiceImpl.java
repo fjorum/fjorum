@@ -1,5 +1,6 @@
 package org.fjorum.model.service;
 
+import com.google.common.collect.Sets;
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.RoleRepository;

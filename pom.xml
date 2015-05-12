@@ -75,6 +75,11 @@
             <version>9.4-1201-jdbc41</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
 
         <!-- JavaScript libs mapped to /ext/js/ -->
         <dependency>

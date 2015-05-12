@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <object th:include="fragments :: head" th:remove="tag" />
+</head>
+<body>
+<div th:replace="fragments :: header ('admin')">Header</div>
+<div th:replace="fragments :: flashMessage">Flash-Message</div>
+
+<h1 th:text="#{admin.title}">Admin</h1>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#users" role="tab" data-toggle="tab">Users</a></li>
+    <li><a href="#roles" role="tab" data-toggle="tab">Roles</a></li>
+    <li><a href="#global" role="tab" data-toggle="tab">Global Settings</a></li>
+    <li><a href="#logs" role="tab" data-toggle="tab">Logs</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="users">
+        <div class="container">
+            <h2>User List</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Active</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td><input type="checkbox" disabled="disabled" th:checked="${user.active} ? 'checked' : ''"/></td>
+                    <td th:text="${user.name}">John</td>
+                    <td th:text="${user.email}">john@example.com</td>
+                    <td><button>Rights</button> <button>Edit</button> <button>Delete</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+    <div class="tab-pane" id="roles">...</div>
+    <div class="tab-pane" id="global">...</div>
+    <div class="tab-pane" id="logs">...</div>
+</div>
+
+
+<div th:replace="fragments :: footer">Footer</div>
+<div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
+</body>
+</html>
