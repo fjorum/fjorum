@@ -1,6 +1,9 @@
 package org.fjorum.model.entity;
 
+import org.fjorum.model.entity.permission.PermissionConverter;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,15 +16,22 @@ public class Role {
     @Column(name="name", nullable = false)
     private String name;
     @Column(name="description")
-    private String description;
+    private String descriptionKey;
     @Column(name="predefined")
     boolean predefined;
 
-    @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="role_permission",
-            joinColumns=@JoinColumn(name="role_id"),
-            inverseJoinColumns=@JoinColumn(name="permission_id"))
-    private Set<Permission> permissions;
+    @Convert(converter = PermissionConverter.class)
+    @ElementCollection
+    @CollectionTable(name="role_permissions", joinColumns=@JoinColumn(name="role_id"))
+    private Set<Permission> permissions = new HashSet<>();
+
+    Role() {}
+
+    public Role(String name, String descriptionKey, boolean predefined) {
+        this.name = name;
+        this.descriptionKey = descriptionKey;
+        this.predefined = predefined;
+    }
 
     public Long getId(){ return id; }
 
@@ -37,12 +47,12 @@ public class Role {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionKey() {
+        return descriptionKey;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionKey(String descriptionKey) {
+        this.descriptionKey = descriptionKey;
     }
 
     public boolean isPredefined() {

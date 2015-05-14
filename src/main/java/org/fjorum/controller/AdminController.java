@@ -1,10 +1,12 @@
 package org.fjorum.controller;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,16 +21,20 @@ import javax.validation.Valid;
 public class AdminController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @Transactional(readOnly = true)
     public String getUsersPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("form", new UserCreateForm());
+        model.addAttribute("roles", roleService.getAllRoles());
         return "admin";
     }
 

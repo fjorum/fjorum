@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title></title>
-    <object th:include="fragments :: head" th:remove="tag" />
+    <object th:include="fragments :: head" th:remove="tag"/>
 </head>
 <body>
 <div th:replace="fragments :: header ('admin')">Header</div>
@@ -22,7 +22,6 @@
 <div class="tab-content">
     <div class="tab-pane active" id="users">
         <div class="container">
-            <h2>User List</h2>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -34,19 +33,58 @@
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td><input type="checkbox" disabled="disabled" th:checked="${user.active} ? 'checked' : ''"/></td>
+                    <td><input type="checkbox" disabled="disabled" th:when="${user.active}" th:checked="checked"/></td>
                     <td th:text="${user.name}">John</td>
                     <td th:text="${user.email}">john@example.com</td>
-                    <td><button>Rights</button> <button>Edit</button> <button>Delete</button></td>
+                    <td>
+                        <button>Rights</button>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
+            <button>Add User</button>
         </div>
-
-
-
     </div>
-    <div class="tab-pane" id="roles">...</div>
+    <div class="tab-pane" id="roles">
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Predefined</th>
+                    <th>Role</th>
+                    <th>Description</th>
+                    <th>Permissions</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="role : ${roles}" th:remove="tag">
+                    <tr>
+                        <td><input type="checkbox" disabled="disabled" th:when="${role.predefined}"
+                                   th:checked="checked"/></td>
+                        <td th:text="${role.name}">ROLE_USER</td>
+                        <td th:text="#{${role.descriptionKey}}">Standard role for users</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <button>Permissions</button>
+                            <button>Delete</button>
+                        </td>
+                    </tr>
+                    <tr th:each="permission : ${role.getPermissions()}">
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td th:text="${permission.name}">ACCESS_FORUM</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+            <button>Add Role</button>
+        </div>
+    </div>
     <div class="tab-pane" id="global">...</div>
     <div class="tab-pane" id="logs">...</div>
 </div>
