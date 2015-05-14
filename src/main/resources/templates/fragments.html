@@ -94,11 +94,6 @@
     </div>
 </div>
 
-<form>
-    <input th:fragment="csrf" type="hidden" name="csrf.parameterName" value="csrf.token"
-           th:attr="name=${_csrf.parameterName}, value=${_csrf.token}"/>
-</form>
-
 <div th:fragment="footer">
     <hr/>
     <footer th:if="${currentUser}" th:text="'Logged in as ' + ${currentUser.name}">

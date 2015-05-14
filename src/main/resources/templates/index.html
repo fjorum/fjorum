@@ -16,10 +16,9 @@
 <div class="panel panel-default">
     <div class="panel-heading" th:text="#{index.login}">Login-Titel</div>
     <div class="panel-body">
-        <form role="form" action="/login" method="post">
+        <form role="form" th:action="'/login'" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <div th:replace="fragments :: csrf"></div>
                     <label for="emailOrName" th:text="#{entity.userEmailOrName}">Email or Name</label>
                     <input class="form-control" type="text" id="emailOrName" name="emailOrName"/>
                     <br/>
