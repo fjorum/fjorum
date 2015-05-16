@@ -61,7 +61,7 @@
                         <a href="/profile" th:text="#{header.profile}">Profile</a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav">
+                <ul th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_ADMINISTRATION_PAGE')}" class="nav navbar-nav">
                     <li th:class="${nav} == 'admin' ? 'active' : ''">
                         <a href="/admin" th:text="#{header.admin}">Admin</a>
                     </li>

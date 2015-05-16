@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title>
+    <title th:text="#{title.index}">Login</title>
     <object th:include="fragments :: head" th:remove="tag" />
 </head>
 <body>
 <div th:replace="fragments :: header ('index')">Header</div>
 <div th:replace="fragments :: flashMessage">Flash-Message</div>
 
-<h1 th:text="#{index.title}">Mock-Titel</h1>
+<h1 th:text="#{index.title}">Login</h1>
 
-<p th:text="#{index.content}">Mock-Content</p>
+<p th:text="#{index.content}">Content</p>
 
 <div class="panel panel-default">
     <div class="panel-heading" th:text="#{index.login}">Login-Titel</div>

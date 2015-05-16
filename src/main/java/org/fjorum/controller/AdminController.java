@@ -5,6 +5,7 @@ import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -31,17 +32,18 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
-    public String getUsersPage(Model model) {
+    public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("form", new UserCreateForm());
+        model.addAttribute("userCreateForm", new UserCreateForm());
         model.addAttribute("roles", roleService.getAllRoles());
         return "admin";
     }
 
     @RequestMapping(value = "/userCreate", method = RequestMethod.POST)
-    public String handleUserCreateForm(@Valid @ModelAttribute("form") UserCreateForm form,
-                                       BindingResult bindingResult,
-                                       RedirectAttributes redirectAttributes) {
+    public String handleUserCreateForm(
+            @Valid @ModelAttribute("userCreateForm") UserCreateForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
         } else {

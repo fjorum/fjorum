@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title></title>
+    <title th:text="#{title.admin}">Administration</title>
     <object th:include="fragments :: head" th:remove="tag"/>
 </head>
 <body>
@@ -44,7 +44,26 @@
                 </tr>
                 </tbody>
             </table>
-            <button>Add User</button>
+            <hr/>
+            <form role="form" th:action="'/admin/userCreate'" th:object="${userCreateForm}" method="post">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="name">User name </label>
+                        <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
+                        <br/>
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" id="email" name="email" placeholder="Email"/>
+                        <br/>
+                        <label for="password">Password</label>
+                        <input class="form-control" type="password" id="password" name="password"/>
+                        <br/>
+                        <label for="password">repeat Password</label>
+                        <input class="form-control" type="password" id="passwordRepeated" name="passwordRepeated"/>
+                        <br/>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="tab-pane" id="roles">

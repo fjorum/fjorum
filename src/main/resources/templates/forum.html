@@ -2,15 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{title.profile}">Profil</title>
+    <title th:text="#{title.forum}">Forum</title>
     <object th:include="fragments :: head" th:remove="tag" />
 </head>
 <body>
-<div th:replace="fragments :: header ('profile')">Header</div>
+<div th:replace="fragments :: header ('forum')">Header</div>
 <div th:replace="fragments :: flashMessage">Flash-Message</div>
 
-<h1>Dein Profil!</h1>
-<p>TODO Passwort ändern</p>
+<h1>Forum</h1>
 
 <div th:replace="fragments :: footer">Footer</div>
 <div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
