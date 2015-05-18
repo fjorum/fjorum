@@ -1,12 +1,12 @@
 package org.fjorum.model.service;
 
-import org.fjorum.model.entity.Role;
-
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
+import org.fjorum.model.entity.Role;
+
 public interface RoleService {
-    Collection<Role> getAllRoles();
+    List<Role> getAllRoles();
 
     void addRole(Role role);
 

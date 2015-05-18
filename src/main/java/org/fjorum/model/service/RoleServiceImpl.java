@@ -1,13 +1,12 @@
 package org.fjorum.model.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.fjorum.model.entity.Role;
 import org.fjorum.model.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -19,7 +18,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
 
-    public Collection<Role> getAllRoles() {
+    public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 

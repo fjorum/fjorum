@@ -1,10 +1,20 @@
 package org.fjorum.model.entity;
 
-import org.fjorum.model.entity.permission.PermissionConverter;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+
+import org.fjorum.model.entity.permission.PermissionConverter;
 
 @Entity
 @Table(name = "roles")
@@ -13,19 +23,20 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name="description")
+    @Column(name = "description")
     private String descriptionKey;
-    @Column(name="predefined")
+    @Column(name = "predefined")
     boolean predefined;
 
     @Convert(converter = PermissionConverter.class)
     @ElementCollection
-    @CollectionTable(name="role_permissions", joinColumns=@JoinColumn(name="role_id"))
+    @CollectionTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"))
     private Set<Permission> permissions = new HashSet<>();
 
-    Role() {}
+    Role() {
+    }
 
     public Role(String name, String descriptionKey, boolean predefined) {
         this.name = name;
@@ -33,7 +44,9 @@ public class Role {
         this.predefined = predefined;
     }
 
-    public Long getId(){ return id; }
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -69,5 +82,25 @@ public class Role {
 
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof Role)) return false;
+
+        Role role = (Role) o;
+
+        return id != null && id.equals(role.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

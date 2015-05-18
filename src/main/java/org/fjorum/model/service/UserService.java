@@ -1,11 +1,10 @@
 package org.fjorum.model.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.model.entity.User;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
 
 public interface UserService {
 
@@ -13,7 +12,7 @@ public interface UserService {
 
     Optional<User> getUserByNameOrEmail(String nameOrEmail);
 
-    Collection<User> getAllUsers();
+    List<User> getAllUsers();
 
     User create(UserCreateForm form);
 
