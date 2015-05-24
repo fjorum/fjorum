@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td><input type="checkbox" disabled="disabled" th:when="${user.active}" th:checked="checked"/></td>
+                    <td><input type="checkbox" disabled="disabled" th:checked="${user.active}"/></td>
                     <td th:text="${user.name}">John</td>
                     <td th:text="${user.email}">john@example.com</td>
                     <td>
@@ -88,7 +88,7 @@
                 </tbody>
             </table>
             <hr/>
-            <form role="form" th:action="'/admin/userCreate'" th:object="${userCreateForm}" method="post">
+            <form role="form" th:action="${#mvc.url('AC#handleUserCreateForm').build()}" th:object="${userCreateForm}" method="post">
                 <div class="row">
                     <div class="col-md-5">
                         <label for="name">User name </label>
@@ -124,8 +124,7 @@
                 <tbody>
                 <div th:each="role : ${roles}" th:remove="tag">
                     <tr>
-                        <td><input type="checkbox" disabled="disabled" th:when="${role.predefined}"
-                                   th:checked="checked"/></td>
+                        <td><input type="checkbox" disabled="disabled" th:checked="${role.predefined}"/></td>
                         <td th:text="${role.name}">ROLE_USER</td>
                         <td th:text="#{${role.descriptionKey}}">Standard role for users</td>
                         <td>&nbsp;</td>
