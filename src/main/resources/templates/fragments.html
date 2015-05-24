@@ -53,22 +53,22 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li th:class="${nav} == 'forum' ? 'active' : ''">
-                        <a href="/forum" th:text="#{header.forum}">Forum</a>
+                        <a th:href="${#mvc.url('FC#forum').build()}" th:text="#{header.forum}">Forum</a>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav">
                     <li th:class="${nav} == 'profile' ? 'active' : ''">
-                        <a href="/profile" th:text="#{header.profile}">Profile</a>
+                        <a th:href="${#mvc.url('PC#profile').build()}" th:text="#{header.profile}">Profile</a>
                     </li>
                 </ul>
                 <ul th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_ADMINISTRATION_PAGE')}" class="nav navbar-nav">
                     <li th:class="${nav} == 'admin' ? 'active' : ''">
-                        <a href="/admin" th:text="#{header.admin}">Admin</a>
+                        <a th:href="${#mvc.url('AC#getAdminPage').build()}" th:text="#{header.admin}">Admin</a>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav" th:if="${currentUser}">
                     <li>
-                        <a href="/logoutForm" th:text="#{header.logout}">Logout</a>
+                        <a th:href="${#mvc.url('IC#logout').build()}" th:text="#{header.logout}">Logout</a>
                     </li>
                 </ul>
             </div>
