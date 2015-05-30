@@ -8,7 +8,7 @@ import org.fjorum.model.entity.Role;
 public interface RoleService {
     List<Role> getAllRoles();
 
-    void addRole(Role role);
+    Role addRole(Role role);
 
     Optional<Role> findRole(String name);
 }
