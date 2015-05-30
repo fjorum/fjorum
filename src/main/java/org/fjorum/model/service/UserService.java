@@ -16,6 +16,6 @@ public interface UserService {
 
     User create(UserCreateForm form);
 
-    void save(User user);
+    User save(User user);
 
 }
