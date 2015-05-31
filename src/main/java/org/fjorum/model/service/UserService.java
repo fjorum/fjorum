@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.controller.form.UserRightsForm;
 import org.fjorum.model.entity.User;
 
 public interface UserService {
@@ -17,5 +18,7 @@ public interface UserService {
     User create(UserCreateForm form);
 
     User save(User user);
+
+    void changeRights(UserRightsForm form);
 
 }

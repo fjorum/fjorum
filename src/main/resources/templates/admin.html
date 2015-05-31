@@ -50,8 +50,10 @@
                                         <h4 class="modal-title" id="myModalLabel"
                                             th:text="'User Rights for ' + ${user.name}">User Rights for John Doe</h4>
                                     </div>
-                                    <form>
-                                        <div class="modal-body">
+                                    <div class="modal-body">
+                                        <form role="form" th:action="${#mvc.url('AC#handleUserRightsForm').build()}"
+                                              th:object="${userRightsForm}" method="post">
+                                            <input type="hidden" id="userId" name="userId" th:value="${user.id}"/>
                                             <table class="table table-striped">
                                                 <thead>
                                                 <tr>
@@ -61,22 +63,23 @@
                                                 </thead>
                                                 <tbody>
                                                 <tr th:each="r : ${roles}">
-                                                    <td><input type="checkbox" name="role" th:value="${r.name}"
+                                                    <td><input type="checkbox" id="roleId" name="roleId"
+                                                               th:value="${r.id}"
                                                                th:checked="${#sets.contains(user.roles,r)}"/>
                                                     </td>
-                                                    <td th:text="${r.name} + ' -- ' + ${#sets.contains(user.roles,r)}+' -- ' + ${user.roles.toString()}">
+                                                    <td th:text="${r.name}">
                                                         ROLE_USER
                                                     </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close
                                             </button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </form>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </form>
+                                    </div>
+                                    <!--<div class="modal-footer">
+                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -88,7 +91,8 @@
                 </tbody>
             </table>
             <hr/>
-            <form role="form" th:action="${#mvc.url('AC#handleUserCreateForm').build()}" th:object="${userCreateForm}" method="post">
+            <form role="form" th:action="${#mvc.url('AC#handleUserCreateForm').build()}" th:object="${userCreateForm}"
+                  method="post">
                 <div class="row">
                     <div class="col-md-5">
                         <label for="name">User name </label>

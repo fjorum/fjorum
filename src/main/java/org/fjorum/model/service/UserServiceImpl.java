@@ -2,8 +2,12 @@ package org.fjorum.model.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.controller.form.UserRightsForm;
+import org.fjorum.model.entity.Role;
 import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -49,6 +55,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public void changeRights(UserRightsForm form) {
+        Set<Role> roles = roleService.getAllRoles().stream().
+                filter(role -> form.getRoleId().contains(role.getId())).
+                collect(Collectors.toSet());
+        User user = getUserById(form.getUserId()).orElseThrow(RuntimeException::new);
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 
 }

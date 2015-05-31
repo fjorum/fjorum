@@ -3,6 +3,7 @@ package org.fjorum.controller;
 import javax.validation.Valid;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.controller.form.UserRightsForm;
 import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ public class AdminController {
     @Transactional(readOnly = true)
     public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("userCreateForm", new UserCreateForm());
         model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("userCreateForm", new UserCreateForm());
+        model.addAttribute("userRightsForm", new UserRightsForm());
         return "admin";
     }
 
@@ -52,6 +54,25 @@ public class AdminController {
             } catch (DataIntegrityViolationException e) {
                 bindingResult.reject("email.exists", "Email already exists");
                 FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
+            }
+        }
+        return "redirect:/admin";
+    }
+
+    @RequestMapping(value = "/userRights", method = RequestMethod.POST)
+    public String handleUserRightsForm(
+            @Valid @ModelAttribute("userRightsForm") UserRightsForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            FlashMessage.ERROR.put(redirectAttributes, "user.rights.failure");
+        } else {
+            try {
+                userService.changeRights(form);
+                FlashMessage.SUCCESS.put(redirectAttributes, "user.rights.success");
+            } catch (DataIntegrityViolationException e) {
+                //bindingResult.reject("email.exists", "Email already exists");
+                FlashMessage.ERROR.put(redirectAttributes, "user.rights.failure");
             }
         }
         return "redirect:/admin";
