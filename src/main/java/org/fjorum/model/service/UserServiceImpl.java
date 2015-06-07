@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
+    @Override
     public void changeRights(UserRightsForm form) {
         Set<Role> roles = roleService.getAllRoles().stream().
                 filter(role -> form.getRoleId().contains(role.getId())).

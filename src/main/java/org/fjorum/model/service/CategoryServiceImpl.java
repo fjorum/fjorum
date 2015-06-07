@@ -3,6 +3,8 @@ package org.fjorum.model.service;
 
 import org.fjorum.model.entity.Category;
 import org.fjorum.model.repository.CategoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,6 @@ import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
 
     private final CategoryRepository categoryRepository;
 

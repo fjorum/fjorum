@@ -25,7 +25,7 @@
                 <button type="button" data-toggle="modal" th:attr="data-target='#userRightsModal' + ${user.id}">
                     Rights
                 </button>
-                <div class="modal fade" th:id="'userRightsModal' + ${user.id}" tabindex="-1" role="dialog"
+                <div class="modal fade" th:id="|userRightsModal${user.id}|" tabindex="-1" role="dialog"
                      aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -33,12 +33,12 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel"
-                                    th:text="'User Rights for ' + ${user.name}">User Rights for John Doe</h4>
+                                    th:text="|User Rights for ${user.name}|">User Rights for John Doe</h4>
                             </div>
                             <div class="modal-body">
                                 <form role="form" th:action="${#mvc.url('AC#handleUserRightsForm').build()}"
                                       th:object="${userRightsForm}" method="post">
-                                    <input type="hidden" id="userId" name="userId" th:value="${user.id}"/>
+                                    <input type="hidden" name="userId" th:value="${user.id}"/>
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
@@ -63,8 +63,6 @@
                                     <button type="submit" class="btn btn-primary">Save changes</button>
                                 </form>
                             </div>
-                            <!--<div class="modal-footer">
-                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -73,6 +71,28 @@
                 <button type="button" data-toggle="modal" th:attr="data-target='#userDeleteModal' + ${user.id}">
                     Delete
                 </button>
+                <div class="modal fade" th:id="|userDeleteModal${user.id}|" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel"
+                                    th:text="|Delete user ${user.name}?|">Delete user John Doe?</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" th:action="${#mvc.url('AC#handleUserDeleteForm').build()}"
+                                       method="post">
+                                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Delete User</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         </tbody>

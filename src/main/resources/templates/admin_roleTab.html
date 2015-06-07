@@ -13,30 +13,20 @@
             <th>Predefined</th>
             <th>Role</th>
             <th>Description</th>
-            <th>Permissions</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <div th:each="role : ${roles}" th:remove="tag">
-            <tr>
+            <tr th:each="role : ${roles}">
                 <td><input type="checkbox" disabled="disabled" th:checked="${role.predefined}"/></td>
                 <td th:text="${role.name}">ROLE_USER</td>
                 <td th:text="#{${role.descriptionKey}}">Standard role for users</td>
-                <td>&nbsp;</td>
                 <td>
                     <button>Permissions</button>
+                    <button>Rename</button>
                     <button>Delete</button>
                 </td>
             </tr>
-            <tr th:each="permission : ${role.getPermissions()}">
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td th:text="${permission.name}">ACCESS_FORUM</td>
-                <td>&nbsp;</td>
-            </tr>
-        </div>
         </tbody>
     </table>
     <button>Add Role</button>

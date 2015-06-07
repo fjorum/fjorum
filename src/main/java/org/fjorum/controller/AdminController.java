@@ -1,11 +1,11 @@
 package org.fjorum.controller;
 
-import javax.validation.Valid;
-
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.controller.form.UserRightsForm;
 import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -15,11 +15,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final UserService userService;
     private final RoleService roleService;
@@ -77,4 +83,21 @@ public class AdminController {
         }
         return "redirect:/admin";
     }
+
+    @RequestMapping(value = "/userDelete", method = RequestMethod.POST)
+    public String handleUserDeleteForm(
+            @RequestParam("userId") Long userId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            userService.delete(userService.
+                    getUserById(userId).
+                    orElseThrow(NoSuchElementException::new));
+            FlashMessage.SUCCESS.put(redirectAttributes, "user.delete.success");
+        } catch (RuntimeException e) {
+            logger.error("Can't delete user " + userId, e);
+            FlashMessage.ERROR.put(redirectAttributes, "user.delete.failure");
+        }
+        return "redirect:/admin";
+    }
+
 }
