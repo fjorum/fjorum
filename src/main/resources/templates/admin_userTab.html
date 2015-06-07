@@ -82,8 +82,8 @@
                                     th:text="|Delete user ${user.name}?|">Delete user John Doe?</h4>
                             </div>
                             <div class="modal-body">
-                                <form role="form" th:action="${#mvc.url('AC#handleUserDeleteForm').build()}"
-                                       method="post">
+                                <!--"${#mvc.url('AC#handleUserDeleteForm').build()}"-->
+                                <form role="form" th:action="'/admin/userDelete'" method="post">
                                     <input type="hidden" name="userId" th:value="${user.id}"/>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
                                     </button>
