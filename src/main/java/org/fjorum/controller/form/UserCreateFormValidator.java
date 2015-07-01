@@ -19,7 +19,7 @@ public class UserCreateFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(UserCreateForm.class);
+        return UserCreateForm.class.equals(clazz);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package org.fjorum;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.model.entity.Category;
 import org.fjorum.model.entity.Role;
 import org.fjorum.model.entity.User;
+import org.fjorum.model.service.CategoryService;
 import org.fjorum.model.service.PermissionService;
 import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
@@ -18,26 +20,25 @@ import org.springframework.stereotype.Component;
 @Profile("development")
 public class DbInitializer {
 
-    private final RoleService roleService;
-    private final UserService userService;
-    private final PermissionService permissionService;
-
     private enum ROLE {ROLE_USER, ROLE_MODERATOR, ROLE_ADMINISTRATOR, ROLE_OWNER, ROLE_GUEST}
 
     @Autowired
-    public DbInitializer(RoleService roleService, UserService userService, PermissionService permissionService) {
-        this.roleService = roleService;
-        this.userService = userService;
-        this.permissionService = permissionService;
+    public DbInitializer(RoleService roleService,
+                         UserService userService,
+                         CategoryService categoryService,
+                         PermissionService permissionService) {
         if (roleService.getAllRoles().isEmpty()) {
-            initRoles();
+            initRoles(roleService, permissionService);
         }
         if (userService.getAllUsers().isEmpty()) {
-            initOwner();
+            initOwner(userService, roleService);
+        }
+        if (categoryService.getRootCategory() == null) {
+            initCategory(categoryService);
         }
     }
 
-    private void initRoles() {
+    private void initRoles(RoleService roleService, PermissionService permissionService) {
         for (ROLE roleEnum : ROLE.values()) {
             String roleName = roleEnum.name();
             String roleKey = roleName.replace('_', '.').toLowerCase();
@@ -50,7 +51,7 @@ public class DbInitializer {
         }
     }
 
-    private void initOwner() {
+    private void initOwner(UserService userService, RoleService roleService) {
         UserCreateForm form = new UserCreateForm();
         form.setName("admin");
         form.setEmail("admin@foo.bar");
@@ -65,4 +66,10 @@ public class DbInitializer {
         user.getRoles().add(owner_role);
         userService.save(user);
     }
+
+    private void initCategory(CategoryService categoryService) {
+        Category root = new Category(CategoryService.ROOT, null);
+        categoryService.save(root);
+    }
+
 }

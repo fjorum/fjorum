@@ -29,6 +29,8 @@ public class Category {
 
     public Category(String name, Category parent) {
         setName(name);
+        List<Category> children = parent.getChildren();
+        setOrderId(children.isEmpty() ? 0 : children.get(children.size()-1).orderId + 1);
         setParent(parent);
     }
 
@@ -70,5 +72,9 @@ public class Category {
 
     public void setParent(Category parent) {
         this.parent = parent;
+    }
+
+    public boolean isRoot() {
+        return id != null && parent == null;
     }
 }

@@ -9,7 +9,30 @@
 <div th:replace="fragments :: header ('forum')">Header</div>
 <div th:replace="fragments :: flashMessage">Flash-Message</div>
 
-<h1>Forum</h1>
+<h1 th:text="${category.name}">Category</h1>
+
+<div th:each="child : ${category.children}" class="panel panel-default">
+    <div class="panel-heading" th:text="${child.name}">Sub-Category</div>
+    <div class="panel-body">TODO useful infos</div>
+</div>
+
+<div class="panel panel-default" th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+    <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
+    <div class="panel-body">
+        <form role="form" th:action="${#mvc.url('FC#handleNewCategoryForm').build()}" th:object="${categoryCreateForm}" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <input type="hidden" name="parentId" th:value="${category.id}"/>
+                    <label for="name" th:text="#{forum.categoryName}">Category Name</label>
+                    <input class="form-control" type="text" id="name" name="name"/>
+                    <br/>
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <div th:replace="fragments :: footer">Footer</div>
 <div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
