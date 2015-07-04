@@ -56,7 +56,7 @@ public class ForumController {
                 FlashMessage.ERROR.put(redirectAttributes, "category.create.failure");
             }
         }
-        return "redirect:/forum";
+        return "redirect:/forum?catId=" + form.getParentId();
     }
 
     /*

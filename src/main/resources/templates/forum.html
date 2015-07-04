@@ -12,7 +12,7 @@
 <h1 th:text="${category.name}">Category</h1>
 
 <div th:each="child : ${category.children}" class="panel panel-default">
-    <div class="panel-heading" th:text="${child.name}">Sub-Category</div>
+    <div class="panel-heading"><a type="button" th:text="${child.name}" th:href="'forum?catId=' + ${child.id}">Category Name</a></div>
     <div class="panel-body">TODO useful infos</div>
 </div>
 
