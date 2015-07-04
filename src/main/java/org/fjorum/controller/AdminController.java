@@ -1,6 +1,7 @@
 package org.fjorum.controller;
 
 import org.fjorum.controller.form.UserCreateForm;
+import org.fjorum.controller.form.UserCreateValidator;
 import org.fjorum.controller.form.UserRightsForm;
 import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
@@ -12,10 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -29,11 +28,20 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final UserCreateValidator userCreateValidator;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService,
+                           RoleService roleService,
+                           UserCreateValidator userCreateValidator) {
         this.userService = userService;
         this.roleService = roleService;
+        this.userCreateValidator = userCreateValidator;
+    }
+
+    @InitBinder(UserCreateForm.NAME)
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(userCreateValidator);
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -48,7 +56,7 @@ public class AdminController {
 
     @RequestMapping(value = "/userCreate", method = RequestMethod.POST)
     public String handleUserCreateForm(
-            @Valid @ModelAttribute("userCreateForm") UserCreateForm form,
+            @Valid @ModelAttribute(UserCreateForm.NAME) UserCreateForm form,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {

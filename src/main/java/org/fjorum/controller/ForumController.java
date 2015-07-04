@@ -1,6 +1,7 @@
 package org.fjorum.controller;
 
 import org.fjorum.controller.form.CategoryCreateForm;
+import org.fjorum.controller.form.CategoryCreateValidator;
 import org.fjorum.model.entity.Category;
 import org.fjorum.model.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -22,10 +21,17 @@ import java.util.Optional;
 public class ForumController {
 
     private final CategoryService categoryService;
+    private final CategoryCreateValidator categoryCreateValidator;
 
     @Autowired
-    public ForumController(CategoryService categoryService) {
+    public ForumController(CategoryService categoryService, CategoryCreateValidator categoryCreateValidator) {
         this.categoryService = categoryService;
+        this.categoryCreateValidator = categoryCreateValidator;
+    }
+
+    @InitBinder(CategoryCreateForm.NAME)
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(categoryCreateValidator);
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -59,23 +65,4 @@ public class ForumController {
         return "redirect:/forum?catId=" + form.getParentId();
     }
 
-    /*
-    @RequestMapping(value = "/userCreate", method = RequestMethod.POST)
-    public String handleUserCreateForm(
-            @Valid @ModelAttribute("userCreateForm") UserCreateForm form,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
-        } else {
-            try {
-                userService.create(form);
-                FlashMessage.SUCCESS.put(redirectAttributes, "user.create.success");
-            } catch (DataIntegrityViolationException e) {
-                bindingResult.reject("email.exists", "Email already exists");
-                FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
-            }
-        }
-        return "redirect:/forum?cat=";
-    } */
 }

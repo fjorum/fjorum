@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserCreateForm {
 
+    public final static String NAME = "userCreateForm";
+
     @NotEmpty
     private String name = "";
 
