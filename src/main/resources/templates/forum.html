@@ -19,14 +19,32 @@
 <div class="panel panel-default" th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleNewCategoryForm').build()}" th:object="${categoryCreateForm}" method="post">
+        <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}" th:object="${categoryCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="parentId" th:value="${category.id}"/>
+                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
                     <label for="name" th:text="#{forum.categoryName}">Category Name</label>
                     <input class="form-control" type="text" id="name" name="name"/>
                     <br/>
                     <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default" th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+    <div class="panel-heading" th:text="#{forum.newTopic}">New Topic</div>
+    <div class="panel-body">
+        <form role="form" th:action="${#mvc.url('FC#handleTopicCreateForm').build()}" th:object="${topicCreateForm}" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
+                    <input type="hidden" name="userId" th:value="${currentUser.user.id}"/>
+                    <label for="name" th:text="#{forum.topicName}">Topic Name</label>
+                    <input class="form-control" type="text" id="name" name="name"/>
+                    <br/>
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newTopicButton}">Button-Title</button>
                 </div>
             </div>
         </form>
