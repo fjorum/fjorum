@@ -3,40 +3,50 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="#{title.forum}">Forum</title>
-    <object th:include="fragments :: head" th:remove="tag" />
+    <object th:include="fragments :: head" th:remove="tag"/>
 </head>
 <body>
 <div th:replace="fragments :: header ('forum')">Header</div>
 <div th:replace="fragments :: flashMessage">Flash-Message</div>
 
-<h1 th:text="${category.name}">Category</h1>
+<h1 th:text="${category.isRoot()} ? #{forum.overview} : ${category.name}">Category</h1>
 
-<div th:each="child : ${category.children}" class="panel panel-default">
-    <div class="panel-heading"><a type="button" th:text="${child.name}" th:href="'forum?catId=' + ${child.id}">Category Name</a></div>
-    <div class="panel-body">TODO useful infos</div>
+<div class="panel panel-default" th:if="! ${category.children.isEmpty()}">
+    <div class="panel panel-header"><h3 th:text="#{forum.subCategories}">Sub-Categories</h3></div>
+    <div class="panel panel-body">
+        <div th:each="child : ${category.children}" class="panel panel-default">
+            <div class="panel-heading"><a type="button" th:text="${child.name}" th:href="'cat?catId=' + ${child.id}">Category
+                Name</a></div>
+        </div>
+    </div>
 </div>
 
-<div class="panel panel-default" th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+<div class="panel panel-default"
+     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}" th:object="${categoryCreateForm}" method="post">
+        <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}"
+              th:object="${categoryCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
                     <input type="hidden" name="categoryId" th:value="${category.id}"/>
                     <label for="name" th:text="#{forum.categoryName}">Category Name</label>
                     <input class="form-control" type="text" id="name" name="name"/>
                     <br/>
-                    <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title</button>
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<div class="panel panel-default" th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+<div class="panel panel-default"
+     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newTopic}">New Topic</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleTopicCreateForm').build()}" th:object="${topicCreateForm}" method="post">
+        <form role="form" th:action="${#mvc.url('FC#handleTopicCreateForm').build()}" th:object="${topicCreateForm}"
+              method="post">
             <div class="row">
                 <div class="col-md-5">
                     <input type="hidden" name="categoryId" th:value="${category.id}"/>
@@ -44,7 +54,8 @@
                     <label for="name" th:text="#{forum.topicName}">Topic Name</label>
                     <input class="form-control" type="text" id="name" name="name"/>
                     <br/>
-                    <button type="submit" class="btn btn-primary" th:text="#{forum.newTopicButton}">Button-Title</button>
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newTopicButton}">Button-Title
+                    </button>
                 </div>
             </div>
         </form>
