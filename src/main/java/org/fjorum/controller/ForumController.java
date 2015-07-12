@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -46,7 +48,7 @@ public class ForumController {
         return "redirect:/forum/cat";
     }
 
-    @RequestMapping(value="/cat", method = RequestMethod.GET)
+    @RequestMapping(value = "/cat", method = RequestMethod.GET)
     public String showCategory(
             Model model,
             @RequestParam Optional<Long> catId) {
@@ -54,13 +56,14 @@ public class ForumController {
                 flatMap(categoryService::findCategoryById).
                 orElseGet(categoryService::getRootCategory);
         model.addAttribute("category", category);
+        model.addAttribute("breadcrumbs", breadcrumbs(category.getParent()));
         model.addAttribute(CategoryCreateForm.NAME, new CategoryCreateForm());
         model.addAttribute(TopicCreateForm.NAME, new TopicCreateForm());
         return "forum";
     }
 
     @RequestMapping(value = "/categoryCreate", method = RequestMethod.POST)
-         public String handleCategoryCreateForm(
+    public String handleCategoryCreateForm(
             @Valid @ModelAttribute(CategoryCreateForm.NAME) CategoryCreateForm form,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
@@ -94,6 +97,30 @@ public class ForumController {
             }
         }
         return "redirect:/forum/cat?catId=" + form.getCategoryId();
+    }
+
+    @RequestMapping(value = "/topic", method = RequestMethod.GET)
+    public String showTopic(
+            Model model,
+            @RequestParam Optional<Long> topicId,
+            RedirectAttributes redirectAttributes) {
+        return topicId.flatMap(topicService::findTopicById).map(topic -> {
+            model.addAttribute("topic", topic);
+            model.addAttribute("breadcrumbs", breadcrumbs(topic.getCategory()));
+            //model.addAttribute(ReplyCreateForm.NAME, new ReplyCreateForm());
+            return "topic";
+        }).orElseGet(() -> {
+            FlashMessage.ERROR.put(redirectAttributes, "topic.show.failure");
+            return "redirect:/forum/cat";
+        });
+    }
+
+    private List<Category> breadcrumbs(Category category) {
+        LinkedList<Category> breadcrumbs = new LinkedList<>();
+        for (Category breadcrumb = category; breadcrumb != null; breadcrumb = breadcrumb.getParent()) {
+            breadcrumbs.addFirst(breadcrumb);
+        }
+        return breadcrumbs;
     }
 
 }

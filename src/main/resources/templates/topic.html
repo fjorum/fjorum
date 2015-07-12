@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{title.forum}">Forum</title>
+    <object th:include="fragments :: head" th:remove="tag"/>
+</head>
+<body>
+<div th:replace="fragments :: header ('forum')">Header</div>
+<div th:replace="fragments :: flashMessage">Flash-Message</div>
+
+<ol class="breadcrumb">
+    <li th:each = "breadcrumb : ${breadcrumbs}">
+        <a th:text="${breadcrumb.isRoot()} ? #{forum.overview} : ${breadcrumb.name}"
+           th:href="'cat?catId=' + ${breadcrumb.id}">Link</a>
+    </li>
+    <li class="active" th:text="${topic.name}">Topic</li>
+</ol>
+
+<h1 th:text="${topic.name}">Topic</h1>
+<p th:text="'by ' + ${topic.user.name} + ', created ' + ${topic.created}">by John Doe, created 01.01.2000 12:00:00</p>
+
+<div th:each="child : ${topic.replies}" class="panel panel-default">
+    <div class="panel-heading"><a type="button" th:text="${child.user.name} + ' at ' + ${child.created}" >Category Name</a></div>
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-body" th:text="${child.content}">
+                Text of the reply.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="panel panel-default"
+     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+    <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
+    <div class="panel-body">
+        <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}"
+              th:object="${categoryCreateForm}" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
+                    <label for="name" th:text="#{forum.categoryName}">Category Name</label>
+                    <input class="form-control" type="text" id="name" name="name"/>
+                    <br/>
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+-->
+
+<div th:replace="fragments :: footer">Footer</div>
+<div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>
+</body>
+</html>

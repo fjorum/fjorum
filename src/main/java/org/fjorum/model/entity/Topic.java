@@ -4,6 +4,7 @@ import org.fjorum.model.entity.converter.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "topic")
@@ -27,6 +28,9 @@ public class Topic {
     private boolean open = true;
     @Column(name = "sticky")
     private boolean sticky = false;
+    @OneToMany(mappedBy = "topic")
+    @OrderBy("created ASC")
+    private List<Reply> replies;
 
     protected Topic() {
     }
@@ -92,5 +96,13 @@ public class Topic {
 
     public void setSticky(boolean sticky) {
         this.sticky = sticky;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
     }
 }

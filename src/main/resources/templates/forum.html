@@ -9,14 +9,31 @@
 <div th:replace="fragments :: header ('forum')">Header</div>
 <div th:replace="fragments :: flashMessage">Flash-Message</div>
 
+<ol class="breadcrumb">
+    <li th:each = "breadcrumb : ${breadcrumbs}">
+        <a th:text="${breadcrumb.isRoot()} ? #{forum.overview} : ${breadcrumb.name}"
+           th:href="'cat?catId=' + ${breadcrumb.id}">Link</a>
+    </li>
+    <li class="active" th:text="${category.isRoot()} ? #{forum.overview} : ${category.name}">Category</li>
+</ol>
+
 <h1 th:text="${category.isRoot()} ? #{forum.overview} : ${category.name}">Category</h1>
 
 <div class="panel panel-default" th:if="! ${category.children.isEmpty()}">
-    <div class="panel panel-header"><h3 th:text="#{forum.subCategories}">Sub-Categories</h3></div>
+    <div class="panel panel-heading"><h3 th:text="#{forum.subCategories}">Sub-Categories</h3></div>
     <div class="panel panel-body">
-        <div th:each="child : ${category.children}" class="panel panel-default">
-            <div class="panel-heading"><a type="button" th:text="${child.name}" th:href="'cat?catId=' + ${child.id}">Category
-                Name</a></div>
+        <div th:each="child : ${category.children}">
+        <a type="button" th:text="${child.name}"
+           th:href="'cat?catId=' + ${child.id}">Category Name</a>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default" th:if="! ${category.topics.isEmpty()}">
+    <div class="panel panel-heading"><h3 th:text="#{forum.topics}">Topics</h3></div>
+    <div class="panel panel-body">
+        <div th:each="child : ${category.topics}">
+        <a type="button" th:text="${child.name}"
+           th:href="'topic?topicId=' + ${child.id}">Topic Name</a>
         </div>
     </div>
 </div>

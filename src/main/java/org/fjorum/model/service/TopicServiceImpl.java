@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TopicServiceImpl implements TopicService {
 
@@ -38,5 +40,10 @@ public class TopicServiceImpl implements TopicService {
     public Topic createNewTopic(Category category, User user, String name) {
         Topic topic = new Topic(category, user, name);
         return topicRepository.save(topic);
+    }
+
+    @Override
+    public Optional<Topic> findTopicById(Long id) {
+        return Optional.ofNullable(topicRepository.findOne(id));
     }
 }

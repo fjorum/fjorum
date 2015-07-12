@@ -24,6 +24,10 @@ public class Category {
     @JoinColumn(name = "parent_id")
     protected Category parent;
 
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
+    private List<Topic> topics = new ArrayList<>();
+
+
     protected Category() {
     }
 
@@ -80,5 +84,13 @@ public class Category {
 
     public boolean isRoot() {
         return id != null && parent == null;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
     }
 }
