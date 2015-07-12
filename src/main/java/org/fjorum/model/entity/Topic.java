@@ -1,7 +1,5 @@
 package org.fjorum.model.entity;
 
-import org.fjorum.model.entity.converter.LocalDateTimeConverter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +17,6 @@ public class Topic {
     @Column(name = "topic_name")
     private String name;
     @Column(name = "created")
-    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
     @ManyToOne
     @JoinColumn(name = "user_id")
