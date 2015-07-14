@@ -31,27 +31,26 @@
     </div>
 </div>
 
-<!--
 <div class="panel panel-default"
-     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
-    <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
+     th:if="${currentUser}"> <!--" and ${currentUser.hasRoleOrPermission('???')}">-->
+    <div class="panel-heading" th:text="#{forum.newReply}">New Reply</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}"
-              th:object="${categoryCreateForm}" method="post">
+        <form role="form" th:action="${#mvc.url('FC#handleReplyCreateForm').build()}"
+              th:object="${replyCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
-                    <label for="name" th:text="#{forum.categoryName}">Category Name</label>
-                    <input class="form-control" type="text" id="name" name="name"/>
+                    <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                    <input type="hidden" name="userId" th:value="${currentUser.user.id}"/>
+                    <label for="content" th:text="#{forum.replyContent}">Reply content</label>
+                    <textarea class="form-control" id="content" name="content" rows="7" columns="50" wrap="soft"></textarea>
                     <br/>
-                    <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title
+                    <button type="submit" class="btn btn-primary" th:text="#{forum.newReplyButton}">Button-Title
                     </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
--->
 
 <div th:replace="fragments :: footer">Footer</div>
 <div th:replace="fragments :: bottomScripts">Bottom-Scripts</div>

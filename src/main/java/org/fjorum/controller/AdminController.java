@@ -1,5 +1,6 @@
 package org.fjorum.controller;
 
+import org.fjorum.controller.form.DeleteForm;
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.controller.form.UserCreateValidator;
 import org.fjorum.controller.form.UserRightsForm;
@@ -23,6 +24,10 @@ import java.util.NoSuchElementException;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private static final String ADMIN_PAGE = "admin";
+    private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin";
+    private static final String USER_DELETE_FORM_NAME = "userDeleteForm";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,9 +54,10 @@ public class AdminController {
     public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("userCreateForm", new UserCreateForm());
-        model.addAttribute("userRightsForm", new UserRightsForm());
-        return "admin";
+        model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
+        model.addAttribute(UserRightsForm.NAME, new UserRightsForm());
+        model.addAttribute(USER_DELETE_FORM_NAME, new DeleteForm());
+        return ADMIN_PAGE;
     }
 
     @RequestMapping(value = "/userCreate", method = RequestMethod.POST)
@@ -70,12 +76,12 @@ public class AdminController {
                 FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
             }
         }
-        return "redirect:/admin";
+        return REDIRECT_ADMIN_PAGE;
     }
 
     @RequestMapping(value = "/userRights", method = RequestMethod.POST)
     public String handleUserRightsForm(
-            @Valid @ModelAttribute("userRightsForm") UserRightsForm form,
+            @Valid @ModelAttribute(UserRightsForm.NAME) UserRightsForm form,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -85,27 +91,26 @@ public class AdminController {
                 userService.changeRights(form);
                 FlashMessage.SUCCESS.put(redirectAttributes, "user.rights.success");
             } catch (DataIntegrityViolationException e) {
-                //bindingResult.reject("email.exists", "Email already exists");
                 FlashMessage.ERROR.put(redirectAttributes, "user.rights.failure");
             }
         }
-        return "redirect:/admin";
+        return REDIRECT_ADMIN_PAGE;
     }
 
     @RequestMapping(value = "/userDelete", method = RequestMethod.POST)
     public String handleUserDeleteForm(
-            @RequestParam("userId") Long userId,
+            @Valid @ModelAttribute(USER_DELETE_FORM_NAME) DeleteForm form,
             RedirectAttributes redirectAttributes) {
         try {
             userService.delete(userService.
-                    getUserById(userId).
+                    getUserById(form.getEntityId()).
                     orElseThrow(NoSuchElementException::new));
             FlashMessage.SUCCESS.put(redirectAttributes, "user.delete.success");
         } catch (RuntimeException e) {
-            logger.error("Can't delete user " + userId, e);
+            logger.error("Can't delete user " + form.getEntityId(), e);
             FlashMessage.ERROR.put(redirectAttributes, "user.delete.failure");
         }
-        return "redirect:/admin";
+        return REDIRECT_ADMIN_PAGE;
     }
 
 }

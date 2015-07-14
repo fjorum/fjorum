@@ -2,10 +2,13 @@ package org.fjorum.controller;
 
 import org.fjorum.controller.form.CategoryCreateForm;
 import org.fjorum.controller.form.CategoryCreateValidator;
+import org.fjorum.controller.form.ReplyCreateForm;
 import org.fjorum.controller.form.TopicCreateForm;
 import org.fjorum.model.entity.Category;
+import org.fjorum.model.entity.Reply;
 import org.fjorum.model.entity.Topic;
 import org.fjorum.model.service.CategoryService;
+import org.fjorum.model.service.ReplyService;
 import org.fjorum.model.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,22 +22,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/forum")
 public class ForumController {
 
+    private static final String FORUM_PAGE = "forum";
+    private static final String TOPIC_PAGE = "topic";
     private final CategoryService categoryService;
     private final TopicService topicService;
+    private final ReplyService replyService;
     private final CategoryCreateValidator categoryCreateValidator;
 
     @Autowired
     public ForumController(CategoryService categoryService,
                            TopicService topicService,
+                           ReplyService replyService,
                            CategoryCreateValidator categoryCreateValidator) {
         this.categoryService = categoryService;
         this.topicService = topicService;
+        this.replyService = replyService;
         this.categoryCreateValidator = categoryCreateValidator;
     }
 
@@ -45,7 +54,7 @@ public class ForumController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String forum() {
-        return "redirect:/forum/cat";
+        return redirectToCategory(null);
     }
 
     @RequestMapping(value = "/cat", method = RequestMethod.GET)
@@ -59,7 +68,7 @@ public class ForumController {
         model.addAttribute("breadcrumbs", breadcrumbs(category.getParent()));
         model.addAttribute(CategoryCreateForm.NAME, new CategoryCreateForm());
         model.addAttribute(TopicCreateForm.NAME, new TopicCreateForm());
-        return "forum";
+        return FORUM_PAGE;
     }
 
     @RequestMapping(value = "/categoryCreate", method = RequestMethod.POST)
@@ -77,7 +86,7 @@ public class ForumController {
                 FlashMessage.ERROR.put(redirectAttributes, "category.create.failure");
             }
         }
-        return "redirect:/forum/cat?catId=" + form.getParentId();
+        return redirectToCategory(form.getParentId());
     }
 
     @RequestMapping(value = "/topicCreate", method = RequestMethod.POST)
@@ -91,12 +100,12 @@ public class ForumController {
             try {
                 Topic topic = topicService.createNewTopic(form);
                 FlashMessage.SUCCESS.put(redirectAttributes, "topic.create.success");
-                return "redirect:/forum/topic?topicId=" + topic.getId();
+                return redirectToTopic(topic.getId());
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "topic.create.failure");
             }
         }
-        return "redirect:/forum/cat?catId=" + form.getCategoryId();
+        return redirectToCategory(form.getCategoryId());
     }
 
     @RequestMapping(value = "/topic", method = RequestMethod.GET)
@@ -108,11 +117,29 @@ public class ForumController {
             model.addAttribute("topic", topic);
             model.addAttribute("breadcrumbs", breadcrumbs(topic.getCategory()));
             //model.addAttribute(ReplyCreateForm.NAME, new ReplyCreateForm());
-            return "topic";
+            return TOPIC_PAGE;
         }).orElseGet(() -> {
             FlashMessage.ERROR.put(redirectAttributes, "topic.show.failure");
-            return "redirect:/forum/cat";
+            return redirectToCategory(null);
         });
+    }
+
+    @RequestMapping(value = "/replyCreate", method = RequestMethod.POST)
+    public String handleReplyCreateForm(
+            @Valid @ModelAttribute(ReplyCreateForm.NAME) ReplyCreateForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");
+        } else {
+            try {
+                replyService.createNewReply(form);
+                FlashMessage.SUCCESS.put(redirectAttributes, "reply.create.success");
+            } catch (DataIntegrityViolationException e) {
+                FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");
+            }
+        }
+        return redirectToTopic(form.getTopicId());
     }
 
     private List<Category> breadcrumbs(Category category) {
@@ -121,6 +148,15 @@ public class ForumController {
             breadcrumbs.addFirst(breadcrumb);
         }
         return breadcrumbs;
+    }
+
+    private String redirectToCategory(Long categoryId) {
+        return "redirect:/forum/cat" +
+                (categoryId == null ? "" : "?catId=" + categoryId);
+    }
+
+    private String redirectToTopic(Long topicId) {
+        return "redirect:/forum/topic?topicId=" + Objects.requireNonNull(topicId);
     }
 
 }

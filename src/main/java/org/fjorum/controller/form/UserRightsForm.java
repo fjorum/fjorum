@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserRightsForm {
+
+    public final static String NAME = "userRightsForm";
+
     @NotNull
     private Long userId = 0L;
 

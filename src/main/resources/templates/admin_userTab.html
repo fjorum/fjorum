@@ -82,9 +82,9 @@
                                     th:text="|Delete user ${user.name}?|">Delete user John Doe?</h4>
                             </div>
                             <div class="modal-body">
-                                <!--"${#mvc.url('AC#handleUserDeleteForm').build()}"-->
-                                <form role="form" th:action="'/admin/userDelete'" method="post">
-                                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                                <form role="form" th:action="${#mvc.url('AC#handleUserDeleteForm').build()}"
+                                      th:object="${userDeleteForm}" method="post">
+                                    <input type="hidden" name="entityId" th:value="${user.id}"/>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
                                     </button>
                                     <button type="submit" class="btn btn-primary">Delete User</button>
