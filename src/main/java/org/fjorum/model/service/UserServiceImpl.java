@@ -1,6 +1,5 @@
 package org.fjorum.model.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,12 +10,12 @@ import org.fjorum.model.entity.Role;
 import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -28,21 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(long id) {
-        return Optional.ofNullable(userRepository.findOne(id));
-    }
-
-    @Override
     public Optional<User> getUserByNameOrEmail(String nameOrEmail) {
         Optional<User> user = nameOrEmail.contains("@")
                 ? userRepository.findOneByEmail(nameOrEmail)
                 : userRepository.findOneByName(nameOrEmail);
         return user;
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll(new Sort("name"));
     }
 
     @Override
@@ -53,13 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public void delete(User user) {
-        userRepository.delete(user);
+    protected JpaRepository<User, Long> getRepository() {
+        return userRepository;
     }
 
     @Override
@@ -67,7 +51,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = roleService.getAllRoles().stream().
                 filter(role -> form.getRoleId().contains(role.getId())).
                 collect(Collectors.toSet());
-        User user = getUserById(form.getUserId()).orElseThrow(RuntimeException::new);
+        User user = getById(form.getUserId()).orElseThrow(RuntimeException::new);
         user.setRoles(roles);
         userRepository.save(user);
     }

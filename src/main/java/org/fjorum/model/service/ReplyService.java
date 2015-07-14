@@ -9,11 +9,10 @@ import org.fjorum.model.entity.User;
 
 import java.util.Optional;
 
-public interface ReplyService {
+public interface ReplyService extends EntityService<Reply> {
 
     Reply createNewReply(ReplyCreateForm form);
 
     Reply createNewReply(Topic topic, User user, String name);
 
-    Optional<Reply> findReplyById(Long id);
 }

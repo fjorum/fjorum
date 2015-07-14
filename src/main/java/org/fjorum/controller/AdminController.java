@@ -52,7 +52,7 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String getAdminPage(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", userService.getAll());
         model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
         model.addAttribute(UserRightsForm.NAME, new UserRightsForm());
@@ -103,7 +103,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
         try {
             userService.delete(userService.
-                    getUserById(form.getEntityId()).
+                    getById(form.getEntityId()).
                     orElseThrow(NoSuchElementException::new));
             FlashMessage.SUCCESS.put(redirectAttributes, "user.delete.success");
         } catch (RuntimeException e) {

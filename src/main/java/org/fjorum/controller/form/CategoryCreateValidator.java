@@ -24,7 +24,7 @@ public class CategoryCreateValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         CategoryCreateForm form = (CategoryCreateForm) target;
-        categoryService.findCategoryById(form.getParentId()).<Runnable>map(parent -> () -> {
+        categoryService.getById(form.getParentId()).<Runnable>map(parent -> () -> {
                     if (parent.getChildren().stream().anyMatch(c -> c.getName().equals(form.getName()))) {
                         errors.reject("category.nameExists", "There is already a category with the same name");
                     }

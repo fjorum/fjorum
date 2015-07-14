@@ -62,7 +62,7 @@ public class ForumController {
             Model model,
             @RequestParam Optional<Long> catId) {
         Category category = catId.
-                flatMap(categoryService::findCategoryById).
+                flatMap(categoryService::getById).
                 orElseGet(categoryService::getRootCategory);
         model.addAttribute("category", category);
         model.addAttribute("breadcrumbs", breadcrumbs(category.getParent()));
@@ -113,7 +113,7 @@ public class ForumController {
             Model model,
             @RequestParam Optional<Long> topicId,
             RedirectAttributes redirectAttributes) {
-        return topicId.flatMap(topicService::findTopicById).map(topic -> {
+        return topicId.flatMap(topicService::getById).map(topic -> {
             model.addAttribute("topic", topic);
             model.addAttribute("breadcrumbs", breadcrumbs(topic.getCategory()));
             //model.addAttribute(ReplyCreateForm.NAME, new ReplyCreateForm());

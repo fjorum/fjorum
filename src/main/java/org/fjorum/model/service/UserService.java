@@ -1,25 +1,16 @@
 package org.fjorum.model.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.fjorum.controller.form.UserCreateForm;
 import org.fjorum.controller.form.UserRightsForm;
 import org.fjorum.model.entity.User;
 
-public interface UserService {
+import java.util.Optional;
 
-    Optional<User> getUserById(long id);
+public interface UserService extends EntityService<User> {
 
     Optional<User> getUserByNameOrEmail(String nameOrEmail);
 
-    List<User> getAllUsers();
-
     User create(UserCreateForm form);
-
-    User save(User user);
-
-    void delete(User user);
 
     void changeRights(UserRightsForm form);
 

@@ -1,21 +1,17 @@
 package org.fjorum.model.service;
 
 import org.fjorum.controller.form.ReplyCreateForm;
-import org.fjorum.controller.form.TopicCreateForm;
-import org.fjorum.model.entity.Category;
 import org.fjorum.model.entity.Reply;
 import org.fjorum.model.entity.Topic;
 import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.ReplyRepository;
-import org.fjorum.model.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class ReplyServiceImpl implements ReplyService {
+public class ReplyServiceImpl extends AbstractEntityServiceImpl<Reply> implements ReplyService {
 
     private final ReplyRepository replyRepository;
     private final TopicService topicService;
@@ -33,8 +29,8 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public Reply createNewReply(ReplyCreateForm form) {
-        return topicService.findTopicById(form.getTopicId()).
-                flatMap(category -> userService.getUserById(form.getUserId()).
+        return topicService.getById(form.getTopicId()).
+                flatMap(category -> userService.getById(form.getUserId()).
                         map(user -> createNewReply(category, user, form.getContent()))).
                 orElseThrow(() -> new DataIntegrityViolationException("Topic or user not found"));
     }
@@ -46,7 +42,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Optional<Reply> findReplyById(Long id) {
-        return Optional.ofNullable(replyRepository.findOne(id));
+    protected JpaRepository<Reply, Long> getRepository() {
+        return replyRepository;
     }
 }

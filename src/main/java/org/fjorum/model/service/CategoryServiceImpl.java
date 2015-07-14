@@ -4,19 +4,13 @@ package org.fjorum.model.service;
 import org.fjorum.controller.form.CategoryCreateForm;
 import org.fjorum.model.entity.Category;
 import org.fjorum.model.repository.CategoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl extends AbstractEntityServiceImpl<Category> implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
@@ -33,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createNewCategory(CategoryCreateForm form) {
-        return findCategoryById(form.getParentId()).
+        return getById(form.getParentId()).
                 map(parent -> createNewCategory(form.getName(), parent)).
                 orElseThrow(() -> new DataIntegrityViolationException("Parent category not found"));
     }
@@ -43,14 +37,10 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.getRoot();
     }
 
-    @Override
-    public void removeCategory(Category category) {
-        categoryRepository.delete(category);
-    }
 
     @Override
-    public void save(Category category) {
-        categoryRepository.save(category);
+    protected JpaRepository<Category, Long> getRepository() {
+        return categoryRepository;
     }
 
     @Override
@@ -75,15 +65,5 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.save(category);
             categoryRepository.save(bigger);
         } */
-    }
-
-    @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll(new Sort("sortOrder"));
-    }
-
-    @Override
-    public Optional<Category> findCategoryById(Long id) {
-        return Optional.ofNullable(categoryRepository.findOne(id));
     }
 }

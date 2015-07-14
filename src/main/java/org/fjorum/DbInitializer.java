@@ -30,7 +30,7 @@ public class DbInitializer {
         if (roleService.getAllRoles().isEmpty()) {
             initRoles(roleService, permissionService);
         }
-        if (userService.getAllUsers().isEmpty()) {
+        if (userService.getAll().isEmpty()) {
             initOwner(userService, roleService);
         }
         if (categoryService.getRootCategory() == null) {

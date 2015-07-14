@@ -7,12 +7,11 @@ import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class TopicServiceImpl implements TopicService {
+public class TopicServiceImpl extends AbstractEntityServiceImpl<Topic> implements TopicService {
 
     private final TopicRepository topicRepository;
     private final CategoryService categoryService;
@@ -30,8 +29,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic createNewTopic(TopicCreateForm form) {
-        return categoryService.findCategoryById(form.getCategoryId()).
-                flatMap(category -> userService.getUserById(form.getUserId()).
+        return categoryService.getById(form.getCategoryId()).
+                flatMap(category -> userService.getById(form.getUserId()).
                         map(user -> createNewTopic(category, user, form.getName()))).
                 orElseThrow(() -> new DataIntegrityViolationException("Category or user not found"));
     }
@@ -43,7 +42,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Optional<Topic> findTopicById(Long id) {
-        return Optional.ofNullable(topicRepository.findOne(id));
+    protected JpaRepository<Topic, Long> getRepository() {
+        return topicRepository;
     }
 }

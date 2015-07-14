@@ -6,7 +6,7 @@ import org.fjorum.model.entity.Category;
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoryService {
+public interface CategoryService extends EntityService<Category> {
 
     String ROOT = "__ROOT__";
 
@@ -16,15 +16,9 @@ public interface CategoryService {
 
     Category getRootCategory();
 
-    void removeCategory(Category category);
-
-    void save(Category category);
-
     void up(Category category);
 
     void down(Category category);
 
-    List<Category> getAllCategories();
 
-    Optional<Category> findCategoryById(Long id);
 }
