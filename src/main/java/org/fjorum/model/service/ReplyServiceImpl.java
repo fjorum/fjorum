@@ -10,35 +10,33 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
 @Service
 public class ReplyServiceImpl extends AbstractEntityServiceImpl<Reply> implements ReplyService {
 
     private final ReplyRepository replyRepository;
     private final TopicService topicService;
-    private final UserService userService;
 
     @Autowired
     public ReplyServiceImpl(ReplyRepository replyRepository,
-                            TopicService topicService,
-                            UserService userService) {
+                            TopicService topicService) {
         this.replyRepository = replyRepository;
         this.topicService = topicService;
-        this.userService = userService;
     }
 
 
     @Override
-    public Reply createNewReply(ReplyCreateForm form) {
+    public Reply createNewReply(ReplyCreateForm form, User user) {
         return topicService.getById(form.getTopicId())
-                .<Reply>map(category -> userService.getById(form.getUserId())
-                        .map(user -> createNewReply(category, user, form.getContent()))
-                        .orElseThrow(() -> new DataIntegrityViolationException("User not found")))
+                .map(category -> createNewReply(category, user, form.getContent()))
                 .orElseThrow(() -> new DataIntegrityViolationException("Topic not found"));
     }
 
     @Override
-    public Reply createNewReply(Topic topic, User user, String name) {
-        Reply reply = new Reply(topic, user, name);
+    public Reply createNewReply(Topic topic, User user, String content) {
+        Reply reply = new Reply(topic, user, content);
         return replyRepository.save(reply);
     }
 

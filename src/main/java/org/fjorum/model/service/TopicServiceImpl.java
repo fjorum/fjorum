@@ -15,24 +15,19 @@ public class TopicServiceImpl extends AbstractEntityServiceImpl<Topic> implement
 
     private final TopicRepository topicRepository;
     private final CategoryService categoryService;
-    private final UserService userService;
 
     @Autowired
     public TopicServiceImpl(TopicRepository topicRepository,
-                            CategoryService categoryService,
-                            UserService userService) {
+                            CategoryService categoryService) {
         this.topicRepository = topicRepository;
         this.categoryService = categoryService;
-        this.userService = userService;
     }
 
 
     @Override
-    public Topic createNewTopic(TopicCreateForm form) {
+    public Topic createNewTopic(TopicCreateForm form, User user) {
         return categoryService.getById(form.getCategoryId())
-                .<Topic>map(category -> userService.getById(form.getUserId())
-                        .map(user -> createNewTopic(category, user, form.getName()))
-                        .orElseThrow(() -> new DataIntegrityViolationException("User not found")))
+                .<Topic>map(category -> createNewTopic(category, user, form.getName()))
                 .orElseThrow(() -> new DataIntegrityViolationException("Category not found"));
     }
 

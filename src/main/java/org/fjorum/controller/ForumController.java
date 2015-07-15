@@ -8,6 +8,7 @@ import org.fjorum.model.entity.Category;
 import org.fjorum.model.entity.Reply;
 import org.fjorum.model.entity.Topic;
 import org.fjorum.model.service.CategoryService;
+import org.fjorum.model.service.CurrentUser;
 import org.fjorum.model.service.ReplyService;
 import org.fjorum.model.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,39 +67,38 @@ public class ForumController {
                 orElseGet(categoryService::getRootCategory);
         model.addAttribute("category", category);
         model.addAttribute("breadcrumbs", breadcrumbs(category.getParent()));
-        model.addAttribute(CategoryCreateForm.NAME, new CategoryCreateForm());
-        model.addAttribute(TopicCreateForm.NAME, new TopicCreateForm());
         return FORUM_PAGE;
     }
 
     @RequestMapping(value = "/categoryCreate", method = RequestMethod.POST)
     public String handleCategoryCreateForm(
-            @Valid @ModelAttribute(CategoryCreateForm.NAME) CategoryCreateForm form,
+            @Valid CategoryCreateForm categoryCreateForm,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "category.create.failure");
         } else {
             try {
-                categoryService.createNewCategory(form);
+                categoryService.createNewCategory(categoryCreateForm);
                 FlashMessage.SUCCESS.put(redirectAttributes, "category.create.success");
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "category.create.failure");
             }
         }
-        return redirectToCategory(form.getParentId());
+        return redirectToCategory(categoryCreateForm.getParentId());
     }
 
     @RequestMapping(value = "/topicCreate", method = RequestMethod.POST)
     public String handleTopicCreateForm(
-            @Valid @ModelAttribute(TopicCreateForm.NAME) TopicCreateForm form,
+            @Valid TopicCreateForm form,
+            CurrentUser currentUser,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || currentUser == null) {
             FlashMessage.ERROR.put(redirectAttributes, "topic.create.failure");
         } else {
             try {
-                Topic topic = topicService.createNewTopic(form);
+                Topic topic = topicService.createNewTopic(form, currentUser.getUser());
                 FlashMessage.SUCCESS.put(redirectAttributes, "topic.create.success");
                 return redirectToTopic(topic.getId());
             } catch (DataIntegrityViolationException e) {
@@ -116,7 +116,6 @@ public class ForumController {
         return topicId.flatMap(topicService::getById).map(topic -> {
             model.addAttribute("topic", topic);
             model.addAttribute("breadcrumbs", breadcrumbs(topic.getCategory()));
-            //model.addAttribute(ReplyCreateForm.NAME, new ReplyCreateForm());
             return TOPIC_PAGE;
         }).orElseGet(() -> {
             FlashMessage.ERROR.put(redirectAttributes, "topic.show.failure");
@@ -126,14 +125,15 @@ public class ForumController {
 
     @RequestMapping(value = "/replyCreate", method = RequestMethod.POST)
     public String handleReplyCreateForm(
-            @Valid @ModelAttribute(ReplyCreateForm.NAME) ReplyCreateForm form,
+            @Valid ReplyCreateForm form,
+            CurrentUser currentUser,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || currentUser == null) {
             FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");
         } else {
             try {
-                replyService.createNewReply(form);
+                replyService.createNewReply(form, currentUser.getUser());
                 FlashMessage.SUCCESS.put(redirectAttributes, "reply.create.success");
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");

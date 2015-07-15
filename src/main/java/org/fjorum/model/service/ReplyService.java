@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface ReplyService extends EntityService<Reply> {
 
-    Reply createNewReply(ReplyCreateForm form);
+    Reply createNewReply(ReplyCreateForm form, User user);
 
-    Reply createNewReply(Topic topic, User user, String name);
+    Reply createNewReply(Topic topic, User user, String content);
 
 }

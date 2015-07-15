@@ -54,22 +54,19 @@ public class AdminController {
     public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getAll());
         model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
-        model.addAttribute(UserRightsForm.NAME, new UserRightsForm());
-        model.addAttribute(USER_DELETE_FORM_NAME, new DeleteForm());
         return ADMIN_PAGE;
     }
 
     @RequestMapping(value = "/userCreate", method = RequestMethod.POST)
     public String handleUserCreateForm(
-            @Valid @ModelAttribute(UserCreateForm.NAME) UserCreateForm form,
+            @Valid UserCreateForm userCreateForm,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
         } else {
             try {
-                userService.create(form);
+                userService.create(userCreateForm);
                 FlashMessage.SUCCESS.put(redirectAttributes, "user.create.success");
             } catch (DataIntegrityViolationException e) {
                 bindingResult.reject("email.exists", "Email already exists");
@@ -81,14 +78,14 @@ public class AdminController {
 
     @RequestMapping(value = "/userRights", method = RequestMethod.POST)
     public String handleUserRightsForm(
-            @Valid @ModelAttribute(UserRightsForm.NAME) UserRightsForm form,
+            @Valid UserRightsForm userRightsForm,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "user.rights.failure");
         } else {
             try {
-                userService.changeRights(form);
+                userService.changeRights(userRightsForm);
                 FlashMessage.SUCCESS.put(redirectAttributes, "user.rights.success");
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "user.rights.failure");
@@ -99,7 +96,7 @@ public class AdminController {
 
     @RequestMapping(value = "/userDelete", method = RequestMethod.POST)
     public String handleUserDeleteForm(
-            @Valid @ModelAttribute(USER_DELETE_FORM_NAME) DeleteForm form,
+            @Valid DeleteForm form,
             RedirectAttributes redirectAttributes) {
         try {
             userService.delete(userService.
