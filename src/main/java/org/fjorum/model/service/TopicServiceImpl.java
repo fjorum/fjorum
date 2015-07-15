@@ -29,10 +29,11 @@ public class TopicServiceImpl extends AbstractEntityServiceImpl<Topic> implement
 
     @Override
     public Topic createNewTopic(TopicCreateForm form) {
-        return categoryService.getById(form.getCategoryId()).
-                flatMap(category -> userService.getById(form.getUserId()).
-                        map(user -> createNewTopic(category, user, form.getName()))).
-                orElseThrow(() -> new DataIntegrityViolationException("Category or user not found"));
+        return categoryService.getById(form.getCategoryId())
+                .<Topic>map(category -> userService.getById(form.getUserId())
+                        .map(user -> createNewTopic(category, user, form.getName()))
+                        .orElseThrow(() -> new DataIntegrityViolationException("User not found")))
+                .orElseThrow(() -> new DataIntegrityViolationException("Category not found"));
     }
 
     @Override

@@ -21,9 +21,8 @@ public class CurrentUserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public CurrentUser loadUserByUsername(String nameOrEmail) throws UsernameNotFoundException {
         User user = userService.getUserByNameOrEmail(nameOrEmail)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(String.format(
-                                "User with name or email '%s' was not found", nameOrEmail)));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(
+                        "User with name or email '%s' was not found", nameOrEmail)));
         return new CurrentUser(user);
     }
 }

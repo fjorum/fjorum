@@ -46,9 +46,9 @@
               th:object="${categoryCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
-                    <label for="content" th:text="#{forum.replyContent}">Category Name</label>
-                    <input class="form-control" type="text" id="content" name="content"/>
+                    <input type="hidden" name="parentId" th:value="${category.id}"/>
+                    <label for="name" th:text="#{forum.replyContent}">Category Name</label>
+                    <input class="form-control" type="text" id="name" name="name"/>
                     <br/>
                     <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title
                     </button>

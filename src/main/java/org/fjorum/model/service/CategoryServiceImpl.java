@@ -27,9 +27,9 @@ public class CategoryServiceImpl extends AbstractEntityServiceImpl<Category> imp
 
     @Override
     public Category createNewCategory(CategoryCreateForm form) {
-        return getById(form.getParentId()).
-                map(parent -> createNewCategory(form.getName(), parent)).
-                orElseThrow(() -> new DataIntegrityViolationException("Parent category not found"));
+        return getById(form.getParentId())
+                .map(parent -> createNewCategory(form.getName(), parent))
+                .orElseThrow(() -> new DataIntegrityViolationException("Parent category not found"));
     }
 
     @Override

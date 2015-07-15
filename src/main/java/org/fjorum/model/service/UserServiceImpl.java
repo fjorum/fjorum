@@ -10,6 +10,7 @@ import org.fjorum.model.entity.Role;
 import org.fjorum.model.entity.User;
 import org.fjorum.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,10 +49,11 @@ public class UserServiceImpl extends AbstractEntityServiceImpl<User> implements 
 
     @Override
     public void changeRights(UserRightsForm form) {
-        Set<Role> roles = roleService.getAllRoles().stream().
-                filter(role -> form.getRoleId().contains(role.getId())).
-                collect(Collectors.toSet());
-        User user = getById(form.getUserId()).orElseThrow(RuntimeException::new);
+        Set<Role> roles = roleService.getAllRoles().stream()
+                .filter(role -> form.getRoleId().contains(role.getId()))
+                .collect(Collectors.toSet());
+        User user = getById(form.getUserId())
+                .orElseThrow(() -> new DataIntegrityViolationException("User not found"));
         user.setRoles(roles);
         userRepository.save(user);
     }
