@@ -27,7 +27,6 @@ public class AdminController {
 
     private static final String ADMIN_PAGE = "admin";
     private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin";
-    private static final String USER_DELETE_FORM_NAME = "userDeleteForm";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
