@@ -1,14 +1,11 @@
 package org.fjorum.model.service;
 
-import org.fjorum.model.entity.Permission;
+import org.fjorum.model.entity.Role;
 import org.fjorum.model.entity.User;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.of;
 
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 
@@ -21,7 +18,7 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
                 true,
                 true,
                 true,
-                AuthorityUtils.createAuthorityList(getRolesAndPermissions(user)));
+                AuthorityUtils.createAuthorityList(getRoles(user)));
         this.user = user;
     }
 
@@ -37,24 +34,23 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
         return user.getName();
     }
 
-    public Set<String> getRolesAndPermissions() {
-        return user.getRoles().stream().
-                flatMap(role -> concat(of(role.getName()),
-                        role.getPermissions().stream().map(Permission::getName))).
-                collect(Collectors.toSet());
+    public Set<String> getRoles() {
+        return user.getRoles().stream()
+                .flatMap(role -> role.getAllRoles().stream())
+                .map(Role::getName)
+                .collect(Collectors.toSet());
     }
 
-    public boolean hasRoleOrPermission(String name) {
-        return user.getRoles().stream().
-                flatMap(role -> concat(of(role.getName()),
-                        role.getPermissions().stream().map(Permission::getName))).
-                anyMatch(s -> s.equals(name));
+    public boolean hasRole(String name) {
+        return getRoles().stream()
+                .anyMatch(roleName -> roleName.equals(name));
     }
 
-    private static String[] getRolesAndPermissions(User user) {
-        return user.getRoles().stream().flatMap(role -> concat(of(role.getName()),
-                        role.getPermissions().stream().map(Permission::getName))
-        ).distinct().toArray(String[]::new);
+    private static String[] getRoles(User user) {
+        return user.getRoles().stream()
+                .flatMap(role -> role.getAllRoles().stream())
+                .map(Role::getName)
+                .distinct().toArray(String[]::new);
     }
 
 }

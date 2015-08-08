@@ -27,6 +27,7 @@ public class AdminController {
 
     private static final String ADMIN_PAGE = "admin";
     private static final String REDIRECT_ADMIN_PAGE = "redirect:/admin";
+    private static final String USER_DELETE_FORM_NAME = "userDeleteForm";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -53,6 +54,9 @@ public class AdminController {
     public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getAll());
         model.addAttribute("roles", roleService.getAllRoles());
+        //model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
+        //model.addAttribute(UserRightsForm.NAME, new UserRightsForm());
+        //model.addAttribute(USER_DELETE_FORM_NAME, new DeleteForm());
         return ADMIN_PAGE;
     }
 

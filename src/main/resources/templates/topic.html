@@ -32,7 +32,7 @@
 </div>
 
 <div class="panel panel-default"
-     th:if="${currentUser}"> <!--" and ${currentUser.hasRoleOrPermission('???')}">-->
+     th:if="${currentUser}"> <!--" and ${currentUser.hasRole('???')}">-->
     <div class="panel-heading" th:text="#{forum.newReply}">New Reply</div>
     <div class="panel-body">
         <form role="form" th:action="${#mvc.url('FC#handleReplyCreateForm').build()}"

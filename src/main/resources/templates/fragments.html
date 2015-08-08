@@ -61,7 +61,7 @@
                         <a th:href="${#mvc.url('PC#profile').build()}" th:text="#{header.profile}">Profile</a>
                     </li>
                 </ul>
-                <ul th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_ADMINISTRATION_PAGE')}" class="nav navbar-nav">
+                <ul th:if="${currentUser} and ${currentUser.hasRole('ACCESS_ADMINISTRATION_PAGE')}" class="nav navbar-nav">
                     <li th:class="${nav} == 'admin' ? 'active' : ''">
                         <a th:href="${#mvc.url('AC#getAdminPage').build()}" th:text="#{header.admin}">Admin</a>
                     </li>

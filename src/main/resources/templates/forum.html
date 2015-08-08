@@ -39,7 +39,7 @@
 </div>
 
 <div class="panel panel-default"
-     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+     th:if="${currentUser} and ${currentUser.hasRole('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newCategory}">New Category</div>
     <div class="panel-body">
         <form role="form" th:action="${#mvc.url('FC#handleCategoryCreateForm').build()}"
@@ -59,7 +59,7 @@
 </div>
 
 <div class="panel panel-default"
-     th:if="${currentUser} and ${currentUser.hasRoleOrPermission('ACCESS_MODERATION_PAGE')}">
+     th:if="${currentUser} and ${currentUser.hasRole('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newTopic}">New Topic</div>
     <div class="panel-body">
         <form role="form" th:action="${#mvc.url('FC#handleTopicCreateForm').build()}" th:object="${topicCreateForm}"

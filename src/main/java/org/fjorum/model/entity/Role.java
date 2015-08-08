@@ -1,20 +1,10 @@
 package org.fjorum.model.entity;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
-import org.fjorum.model.entity.permission.PermissionConverter;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "roles")
@@ -30,10 +20,11 @@ public class Role {
     @Column(name = "predefined")
     boolean predefined;
 
-    @Convert(converter = PermissionConverter.class)
-    @ElementCollection
-    @CollectionTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"))
-    private Set<Permission> permissions = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "included_roles",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "included_role_id"))
+    private Set<Role> includesRoles = new HashSet<>();
 
     Role() {
     }
@@ -76,12 +67,18 @@ public class Role {
         this.predefined = predefined;
     }
 
-    public Set<Permission> getPermissions() {
-        return permissions;
+    public Set<Role> getIncludedRoles() {
+        return includesRoles;
     }
 
-    public void setPermissions(Set<Permission> permissions) {
-        this.permissions = permissions;
+    public void setIncludedRoles(Set<Role> includedRoles) {
+        this.includesRoles = includedRoles;
+    }
+
+    public Set<Role> getAllRoles() {
+        return Stream.concat(Stream.of(this),
+                includesRoles.stream().flatMap(role -> role.getAllRoles().stream()))
+                .collect(Collectors.toSet());
     }
 
     @Override

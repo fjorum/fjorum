@@ -39,6 +39,7 @@
                                 <form role="form" th:action="${#mvc.url('AC#handleUserRightsForm').build()}"
                                       th:object="${userRightsForm}" method="post">
                                     <input type="hidden" name="userId" th:value="${user.id}"/>
+                                    <!--<input type="hidden" th:field="*{userId}" th:value="${user.id}"/>-->
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
@@ -56,6 +57,16 @@
                                                 ROLE_USER
                                             </td>
                                         </tr>
+                                        <!--
+                                        <tr th:each="role : ${roles}">
+                                            <td><input type="checkbox" th:field="*{roleId}"                                                       th:value="${role.id}"
+                                                       th:checked="${#sets.contains(user.roles,role)}"/>
+                                            </td>
+                                            <td th:text="${role.name}">
+                                                ROLE_USER
+                                            </td>
+                                        </tr>
+                                        //-->
                                         </tbody>
                                     </table>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
@@ -85,6 +96,7 @@
                                 <form role="form" th:action="${#mvc.url('AC#handleUserDeleteForm').build()}"
                                       th:object="${userDeleteForm}" method="post">
                                     <input type="hidden" name="entityId" th:value="${user.id}"/>
+                                    <!--<input type="hidden" th:field="*{entityId}" th:value="${user.id}"/>-->
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
                                     </button>
                                     <button type="submit" class="btn btn-primary">Delete User</button>
@@ -115,6 +127,21 @@
                 <input class="form-control" type="password" id="passwordRepeated" name="passwordRepeated"/>
                 <br/>
                 <button type="submit" class="btn btn-primary">Add User</button>
+                <!--
+                   <label th:for="${#ids.next('name')}">User name </label>
+                <input class="form-control" type="text" th:field="*{name}" placeholder="Name"/>
+                <br/>
+                <label th:for="${#ids.next('email')}">Email</label>
+                <input class="form-control" type="email" th:field="*{email}" placeholder="Email"/>
+                <br/>
+                <label th:for="${#ids.next('password')}">Password</label>
+                <input class="form-control" type="password" th:field="*{password}"/>
+                <br/>
+                <label th:for="${#ids.next('passwordRepeated')}">repeat Password</label>
+                <input class="form-control" type="password" th:field="*{passwordRepeated}"/>
+                <br/>
+                <button type="submit" class="btn btn-primary">Add User</button>
+                //-->
             </div>
         </div>
     </form>

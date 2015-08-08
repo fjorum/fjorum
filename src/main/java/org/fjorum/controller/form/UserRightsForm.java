@@ -6,6 +6,8 @@ import java.util.Set;
 
 public class UserRightsForm {
 
+    public static final String NAME = "userRightsForm";
+
     @NotNull
     private Long userId = 0L;
 

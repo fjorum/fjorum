@@ -12,7 +12,7 @@ public abstract class AbstractEntityServiceImpl<T> implements EntityService<T> {
 
     @Override
     public Optional<T> getById(Long id) {
-        return Optional.ofNullable(getRepository().getOne(id));
+        return Optional.ofNullable(getRepository().findOne(id));
     }
 
     @Override
