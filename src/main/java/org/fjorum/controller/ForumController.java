@@ -11,11 +11,14 @@ import org.fjorum.model.service.CategoryService;
 import org.fjorum.model.service.CurrentUser;
 import org.fjorum.model.service.ReplyService;
 import org.fjorum.model.service.TopicService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -36,6 +39,8 @@ public class ForumController {
     private final TopicService topicService;
     private final ReplyService replyService;
     private final CategoryCreateValidator categoryCreateValidator;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ForumController(CategoryService categoryService,
@@ -61,12 +66,16 @@ public class ForumController {
     @RequestMapping(value = "/cat", method = RequestMethod.GET)
     public String showCategory(
             Model model,
-            @RequestParam Optional<Long> catId) {
+            @RequestParam Optional<Long> catId,
+            CurrentUser currentUser) {
         Category category = catId.
                 flatMap(categoryService::getById).
                 orElseGet(categoryService::getRootCategory);
         model.addAttribute("category", category);
         model.addAttribute("breadcrumbs", breadcrumbs(category.getParent()));
+        model.addAttribute(TopicCreateForm.NAME,
+                new TopicCreateForm(currentUser.getUser(), category));
+        model.addAttribute(CategoryCreateForm.NAME, new CategoryCreateForm(category));
         return FORUM_PAGE;
     }
 
@@ -85,27 +94,29 @@ public class ForumController {
                 FlashMessage.ERROR.put(redirectAttributes, "category.create.failure");
             }
         }
-        return redirectToCategory(categoryCreateForm.getParentId());
+        return redirectToCategory(categoryCreateForm.getParentCategory());
     }
 
     @RequestMapping(value = "/topicCreate", method = RequestMethod.POST)
     public String handleTopicCreateForm(
             @Valid TopicCreateForm form,
-            CurrentUser currentUser,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors() || currentUser == null) {
+        if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "topic.create.failure");
+            for(ObjectError objectError : bindingResult.getAllErrors()) {
+               logger.error(objectError.toString());
+            }
         } else {
             try {
-                Topic topic = topicService.createNewTopic(form, currentUser.getUser());
+                Topic topic = topicService.createNewTopic(form);
                 FlashMessage.SUCCESS.put(redirectAttributes, "topic.create.success");
                 return redirectToTopic(topic.getId());
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "topic.create.failure");
             }
         }
-        return redirectToCategory(form.getCategoryId());
+        return redirectToCategory(form.getCategory());
     }
 
     @RequestMapping(value = "/topic", method = RequestMethod.GET)
@@ -150,9 +161,9 @@ public class ForumController {
         return breadcrumbs;
     }
 
-    private String redirectToCategory(Long categoryId) {
+    private String redirectToCategory(Category category) {
         return "redirect:/forum/cat" +
-                (categoryId == null ? "" : "?catId=" + categoryId);
+                (category == null ? "" : "?catId=" + category.getId());
     }
 
     private String redirectToTopic(Long topicId) {

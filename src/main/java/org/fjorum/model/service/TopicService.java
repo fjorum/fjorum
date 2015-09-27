@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface TopicService extends EntityService<Topic> {
 
-    Topic createNewTopic(TopicCreateForm form, User user);
+    Topic createNewTopic(TopicCreateForm form);
 
     Topic createNewTopic(Category category, User user, String name);
 }

@@ -46,9 +46,9 @@
               th:object="${categoryCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="parentId" th:value="${category.id}"/>
-                    <label for="name" th:text="#{forum.replyContent}">Category Name</label>
-                    <input class="form-control" type="text" id="name" name="name"/>
+                    <input type="hidden" name="parentCategory" th:field="*{parentCategory}"/>
+                    <label for="categoryName" th:text="#{forum.replyContent}">Category Name</label>
+                    <input class="form-control" type="text" id="categoryName" th:field="*{categoryName}"/>
                     <br/>
                     <button type="submit" class="btn btn-primary" th:text="#{forum.newCategoryButton}">Button-Title
                     </button>
@@ -62,14 +62,17 @@
      th:if="${currentUser} and ${currentUser.hasRole('ACCESS_MODERATION_PAGE')}">
     <div class="panel-heading" th:text="#{forum.newTopic}">New Topic</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleTopicCreateForm').build()}" th:object="${topicCreateForm}"
+        <form role="form"
+              action="#"
+              th:action="${#mvc.url('FC#handleTopicCreateForm').build()}"
+              th:object="${topicCreateForm}"
               method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="categoryId" th:value="${category.id}"/>
-                    <input type="hidden" name="userId" th:value="${currentUser.user.id}"/>
-                    <label for="name" th:text="#{forum.topicName}">Topic Name</label>
-                    <input class="form-control" type="text" id="name" name="name"/>
+                    <input type="hidden" name="category" th:field="*{category}"/>
+                    <input type="hidden" name="user" th:field="*{user}"/>
+                    <label for="topicName" th:text="#{forum.topicName}">Topic Name</label>
+                    <input class="form-control" type="text" id="topicName" th:field="*{topicName}"/>
                     <br/>
                     <button type="submit" class="btn btn-primary" th:text="#{forum.newTopicButton}">Button-Title
                     </button>
