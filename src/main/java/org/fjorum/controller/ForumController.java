@@ -123,10 +123,13 @@ public class ForumController {
     public String showTopic(
             Model model,
             @RequestParam Optional<Long> topicId,
+            CurrentUser currentUser,
             RedirectAttributes redirectAttributes) {
         return topicId.flatMap(topicService::getById).map(topic -> {
             model.addAttribute("topic", topic);
             model.addAttribute("breadcrumbs", breadcrumbs(topic.getCategory()));
+            model.addAttribute(ReplyCreateForm.NAME,
+                    new ReplyCreateForm(currentUser.getUser(), topic));
             return TOPIC_PAGE;
         }).orElseGet(() -> {
             FlashMessage.ERROR.put(redirectAttributes, "topic.show.failure");
@@ -137,20 +140,19 @@ public class ForumController {
     @RequestMapping(value = "/replyCreate", method = RequestMethod.POST)
     public String handleReplyCreateForm(
             @Valid ReplyCreateForm form,
-            CurrentUser currentUser,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors() || currentUser == null) {
+        if (bindingResult.hasErrors()) {
             FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");
         } else {
             try {
-                replyService.createNewReply(form, currentUser.getUser());
+                replyService.createNewReply(form);
                 FlashMessage.SUCCESS.put(redirectAttributes, "reply.create.success");
             } catch (DataIntegrityViolationException e) {
                 FlashMessage.ERROR.put(redirectAttributes, "reply.create.failure");
             }
         }
-        return redirectToTopic(form.getTopicId());
+        return redirectToTopic(form.getTopic().getId());
     }
 
     private List<Category> breadcrumbs(Category category) {

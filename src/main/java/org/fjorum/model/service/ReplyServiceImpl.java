@@ -28,10 +28,8 @@ public class ReplyServiceImpl extends AbstractEntityServiceImpl<Reply> implement
 
 
     @Override
-    public Reply createNewReply(ReplyCreateForm form, User user) {
-        return topicService.getById(form.getTopicId())
-                .map(topic -> createNewReply(topic, user, form.getContent()))
-                .orElseThrow(() -> new DataIntegrityViolationException("Topic not found"));
+    public Reply createNewReply(ReplyCreateForm form) {
+        return createNewReply(form.getTopic(), form.getUser(), form.getContent());
     }
 
     @Override

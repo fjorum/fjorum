@@ -35,14 +35,17 @@
      th:if="${currentUser}"> <!--" and ${currentUser.hasRole('???')}">-->
     <div class="panel-heading" th:text="#{forum.newReply}">New Reply</div>
     <div class="panel-body">
-        <form role="form" th:action="${#mvc.url('FC#handleReplyCreateForm').build()}"
+        <form role="form"
+              action="#"
+              th:action="${#mvc.url('FC#handleReplyCreateForm').build()}"
               th:object="${replyCreateForm}" method="post">
             <div class="row">
                 <div class="col-md-5">
-                    <input type="hidden" name="topicId" th:value="${topic.id}"/>
-                    <input type="hidden" name="userId" th:value="${currentUser.user.id}"/>
+                    <input type="hidden" name="topic" th:field="*{topic}"/>
+                    <input type="hidden" name="user" th:field="*{user}"/>
                     <label for="content" th:text="#{forum.replyContent}">Reply content</label>
-                    <textarea class="form-control" id="content" name="content" rows="7" columns="50" wrap="soft"></textarea>
+                    <textarea class="form-control" id="content" th:field="*{content}"
+                              rows="7" columns="50" wrap="soft"></textarea>
                     <br/>
                     <button type="submit" class="btn btn-primary" th:text="#{forum.newReplyButton}">Button-Title
                     </button>
