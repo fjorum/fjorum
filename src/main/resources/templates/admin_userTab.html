@@ -17,12 +17,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
-            <td><input type="checkbox" disabled="disabled" th:checked="${user.active}"/></td>
-            <td th:text="${user.name}">John</td>
-            <td th:text="${user.email}">john@example.com</td>
+        <tr th:each="userEditForm : ${userEditForms}">
+            <td><input type="checkbox" disabled="disabled" th:checked="${userEditForm.active}"/></td>
+            <td th:text="${userEditForm.name}">John</td>
+            <td th:text="${userEditForm.email}">john@example.com</td>
             <td>
-                <button type="button" data-toggle="modal" th:attr="data-target='#userRightsModal' + ${user.id}">
+                <!--<button type="button" data-toggle="modal" th:attr="data-target='#userRightsModal' + ${user.id}">
                     Rights
                 </button>
                 <div class="modal fade" th:id="|userRightsModal${user.id}|" tabindex="-1" role="dialog"
@@ -39,7 +39,7 @@
                                 <form role="form" th:action="${#mvc.url('AC#handleUserRightsForm').build()}"
                                       th:object="${userRightsForm}" method="post">
                                     <input type="hidden" name="userId" th:value="${user.id}"/>
-                                    <!--<input type="hidden" th:field="*{userId}" th:value="${user.id}"/>-->
+                                    !-<input type="hidden" th:field="*{userId}" th:value="${user.id}"/>-
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
@@ -57,7 +57,7 @@
                                                 ROLE_USER
                                             </td>
                                         </tr>
-                                        <!--
+                                        !-
                                         <tr th:each="role : ${roles}">
                                             <td><input type="checkbox" th:field="*{roleId}"                                                       th:value="${role.id}"
                                                        th:checked="${#sets.contains(user.roles,role)}"/>
@@ -66,7 +66,7 @@
                                                 ROLE_USER
                                             </td>
                                         </tr>
-                                        //-->
+                                        //-
                                         </tbody>
                                     </table>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
@@ -76,10 +76,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <button>Edit</button>
-                <button type="button" data-toggle="modal" th:attr="data-target='#userDeleteModal' + ${user.id}">
+                <!--<button type="button" data-toggle="modal" th:attr="data-target='#userDeleteModal' + ${user.id}">
                     Delete
                 </button>
                 <div class="modal fade" th:id="|userDeleteModal${user.id}|" tabindex="-1" role="dialog"
@@ -96,7 +96,7 @@
                                 <form role="form" th:action="${#mvc.url('AC#handleUserDeleteForm').build()}"
                                       th:object="${userDeleteForm}" method="post">
                                     <input type="hidden" name="entityId" th:value="${user.id}"/>
-                                    <!--<input type="hidden" th:field="*{entityId}" th:value="${user.id}"/>-->
+                                    !-<input type="hidden" th:field="*{entityId}" th:value="${user.id}"/>-
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close
                                     </button>
                                     <button type="submit" class="btn btn-primary">Delete User</button>
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </td>
         </tr>
         </tbody>
@@ -114,22 +114,8 @@
           method="post">
         <div class="row">
             <div class="col-md-5">
-                <label for="name">User name </label>
-                <input class="form-control" type="text" id="name" name="name" placeholder="Name"/>
-                <br/>
-                <label for="email">Email</label>
-                <input class="form-control" type="email" id="email" name="email" placeholder="Email"/>
-                <br/>
-                <label for="password">Password</label>
-                <input class="form-control" type="password" id="password" name="password"/>
-                <br/>
-                <label for="password">repeat Password</label>
-                <input class="form-control" type="password" id="passwordRepeated" name="passwordRepeated"/>
-                <br/>
-                <button type="submit" class="btn btn-primary">Add User</button>
-                <!--
-                   <label th:for="${#ids.next('name')}">User name </label>
-                <input class="form-control" type="text" th:field="*{name}" placeholder="Name"/>
+                <label th:for="${#ids.next('name')}">User name </label>
+                <input class="form-control" type="text" id="name" th:field="*{name}" placeholder="Name"/>
                 <br/>
                 <label th:for="${#ids.next('email')}">Email</label>
                 <input class="form-control" type="email" th:field="*{email}" placeholder="Email"/>
@@ -141,7 +127,6 @@
                 <input class="form-control" type="password" th:field="*{passwordRepeated}"/>
                 <br/>
                 <button type="submit" class="btn btn-primary">Add User</button>
-                //-->
             </div>
         </div>
     </form>

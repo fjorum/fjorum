@@ -1,15 +1,14 @@
 package org.fjorum.controller;
 
-import org.fjorum.controller.form.DeleteForm;
-import org.fjorum.controller.form.UserCreateForm;
-import org.fjorum.controller.form.UserCreateValidator;
-import org.fjorum.controller.form.UserRightsForm;
+import org.fjorum.controller.form.*;
+import org.fjorum.model.entity.User;
 import org.fjorum.model.service.RoleService;
 import org.fjorum.model.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,7 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -52,9 +54,14 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.GET)
     @Transactional(readOnly = true)
     public String getAdminPage(Model model) {
-        model.addAttribute("users", userService.getAll());
+        List<UserEditForm> editForms = userService.getAll(new Sort("name")).stream()
+                .map(UserEditForm::new)
+                .collect(Collectors.toList());
+
+        //model.addAttribute("users", userService.getAll());
         model.addAttribute("roles", roleService.getAllRoles());
-        //model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
+        model.addAttribute(UserCreateForm.NAME, new UserCreateForm());
+        model.addAttribute(UserEditForm.NAME + "s", editForms);
         //model.addAttribute(UserRightsForm.NAME, new UserRightsForm());
         //model.addAttribute(USER_DELETE_FORM_NAME, new DeleteForm());
         return ADMIN_PAGE;
@@ -74,6 +81,29 @@ public class AdminController {
             } catch (DataIntegrityViolationException e) {
                 bindingResult.reject("email.exists", "Email already exists");
                 FlashMessage.ERROR.put(redirectAttributes, "user.create.failure");
+            }
+        }
+        return REDIRECT_ADMIN_PAGE;
+    }
+
+    @RequestMapping(value = "/userEdit", method = RequestMethod.POST)
+    public String handleUserEditForm(
+            @Valid UserEditForm userEditForm,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            FlashMessage.ERROR.put(redirectAttributes, "user.edit.failure");
+        } else {
+            try {
+                User user = userEditForm.getEditedUser();
+                user.setName(userEditForm.getName());
+                user.setEmail(userEditForm.getEmail());
+                user.setActive(userEditForm.isActive());
+                userService.save(user);
+                FlashMessage.SUCCESS.put(redirectAttributes, "user.edit.success");
+            } catch (DataIntegrityViolationException e) {
+                bindingResult.reject("email.exists", "Email already exists");
+                FlashMessage.ERROR.put(redirectAttributes, "user.edit.failure");
             }
         }
         return REDIRECT_ADMIN_PAGE;

@@ -13,7 +13,14 @@
 
 <p th:text="#{index.content}">Content</p>
 
-<div class="panel panel-default">
+<div class="panel panel-default" th:if="${currentUser}">
+    <div class="panel-heading" th:text="'Hello ' + ${currentUser.name} + '!'">Hello user!</div>
+    <div class="panel-body">
+        <p th:text="'Welcome back!'"></p>
+    </div>
+</div>
+
+<div class="panel panel-default" th:unless="${currentUser}">
     <div class="panel-heading" th:text="#{index.login}">Login-Titel</div>
     <div class="panel-body">
         <form role="form" action="#" th:action="@{/login}" method="post">
